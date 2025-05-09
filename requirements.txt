@@ -1,10 +1,10 @@
 # Virtual Doctor Assistant dependencies
-streamlit>=1.28.0
-openai>=1.0.0
-pandas>=1.0.0
-openai-agents>=0.1.0
-nest_asyncio>=1.5.0
-python-dotenv>=0.19.0
+streamlit
+openai
+pandas
+openai-agents
+nest_asyncio
+python-dotenv
 
 # The 'agents' module is provided by the openai-agents package
 # nest_asyncio is required for handling nested asyncio event loops
