@@ -1,6 +1,6 @@
 .streamlit
-.env
 .DS_Store
 
 .env
 .streamlit/secrets.toml
+env
