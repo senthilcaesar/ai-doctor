@@ -17,10 +17,19 @@ A futuristic, sci-fi inspired virtual doctor assistant application built with St
   - Validate required fields and provide visual feedback
   - Review all information before submission
 
+- **BMI Calculation and Health Assessment**
+
+  - Automatically calculate BMI based on patient's height and weight
+  - Determine BMI category (underweight, normal weight, overweight, obese)
+  - Provide detailed health assessment based on BMI
+  - Offer personalized health recommendations
+  - Uses OpenAI Agents framework for intelligent analysis
+
 - **Virtual Doctor Chat**
 
   - Discuss health concerns with an AI-powered virtual doctor
   - Context-aware conversations based on submitted patient information
+  - BMI assessment incorporated into the doctor's initial response
   - Support for multiple OpenAI models (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
 
 - **User Interface**
@@ -34,6 +43,7 @@ A futuristic, sci-fi inspired virtual doctor assistant application built with St
 - **Frontend**: Streamlit
 - **Backend**: Python
 - **AI**: OpenAI API (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
+- **AI Framework**: OpenAI Agents Python library
 - **Data Handling**: Pandas
 - **Styling**: Custom CSS
 
@@ -83,11 +93,13 @@ A futuristic, sci-fi inspired virtual doctor assistant application built with St
 
    - Navigate through the tabs to provide your information
    - Required fields are in the Basic Info and Symptoms tabs
+   - Enter your height and weight to receive a BMI assessment
    - Review your information in the Submit Information tab
    - Click "Submit Information" to proceed
 
 4. Chat with the virtual doctor:
    - After submitting your information, click on the "Virtual Doctor" button in the sidebar
+   - The virtual doctor will acknowledge your BMI assessment and provide health recommendations
    - Type your messages in the chat input field
    - Receive responses from the AI-powered virtual doctor
 
@@ -120,30 +132,39 @@ The application follows a modular architecture with separation of concerns:
    - Form validation to ensure required fields are filled
    - Custom HTML tables for displaying information in the review section
 
-2. **Navigation System**
+2. **BMI Calculation System**
+
+   - Uses the OpenAI Agents Python library to create a specialized BMI calculator agent
+   - Converts height and weight to appropriate units for calculation
+   - Determines BMI category based on calculated value
+   - Provides detailed health assessment and recommendations
+   - Integrates seamlessly with the patient information summary
+
+3. **Navigation System**
 
    - Sidebar navigation with "Input Data" and "Virtual Doctor" buttons
    - Visual indicators for the active view
    - Conditional enabling of the Virtual Doctor button
 
-3. **Chat Interface**
+4. **Chat Interface**
 
    - Integration with OpenAI's API for generating responses
-   - Context-aware conversations using the patient's information
+   - Context-aware conversations using the patient's information including BMI assessment
    - Enhanced chat UI with larger message display area
 
-4. **Session State Management**
+5. **Session State Management**
    - Persistent storage of patient information
    - Conversation history tracking
    - View state management
 
 ### AI Integration
 
-The application uses OpenAI's GPT models to power the virtual doctor assistant:
+The application uses OpenAI's GPT models and Agents framework to power the virtual doctor assistant:
 
 - System instructions define the assistant's role and limitations
-- Patient information is added to the conversation context
+- Patient information including BMI assessment is added to the conversation context
 - The assistant maintains a conversational history for context-aware responses
+- Specialized agents handle specific tasks like BMI calculation
 
 ## 🔮 Future Improvements
 
@@ -154,6 +175,7 @@ The application uses OpenAI's GPT models to power the virtual doctor assistant:
 - Add multilingual support
 - Implement voice input/output capabilities
 - Create a mobile-friendly version
+- Expand health metrics beyond BMI (blood pressure, cholesterol, etc.)
 
 ## 📄 License
 
@@ -162,7 +184,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgements
 
 - [Streamlit](https://streamlit.io/) for the amazing web framework
-- [OpenAI](https://openai.com/) for the powerful language models
+- [OpenAI](https://openai.com/) for the powerful language models and Agents framework
 - [Pandas](https://pandas.pydata.org/) for data handling
 
 ---
