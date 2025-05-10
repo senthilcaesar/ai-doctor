@@ -241,7 +241,7 @@ def render_sidebar():
             st.session_state.current_view = "input_data"  # Default view
         
         # Navigation section
-        st.markdown("### Navigation")
+        #st.markdown("### Navigation")
         
         # Input Data button
         col1, col2 = st.columns([1, 4])
@@ -276,11 +276,11 @@ def render_sidebar():
         st.markdown("### Configuration")
         model_option = st.selectbox(
             "Select OpenAI model",
-            ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
+            ["o4-mini-2025-04-16", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
             index=0
         )
         
-        st.info("Using API key from .streamlit/secrets.toml")
+        #st.info("Using API key from .streamlit/secrets.toml")
         
         # Reset button
         reset_button = st.button("Reset Patient Information", use_container_width=True)

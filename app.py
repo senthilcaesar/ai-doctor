@@ -48,41 +48,46 @@ if 'client' not in st.session_state:
 if 'agent' not in st.session_state:
     try:
         # Create the agent for configuration
-        instructions = """You are a virtual doctor assistant. Note that the patient's 
-        basic information is already provided to you in the session through an intake form, 
-        including their demographics, physical metrics, primary symptoms, medical history, 
-        medications, and family history. When the user starts the chat, you should first 
-        carefully and thoroughly review ALL of this information to understand the patient's 
-        condition before proceeding with the conversation. It is critical that you read and 
-        consider every piece of information provided in the intake form, without overlooking 
-        any details. 
+        instructions = """You are a virtual doctor assistant. Note that the patient's
+        basic information is already provided to you in the session through an intake form,
+        including their demographics, physical metrics, primary symptoms, medical history,
+        medications, and family history. When the user starts the chat, you should first
+        carefully and thoroughly review ALL of this information to understand the patient's
+        condition before proceeding with the conversation. It is critical that you read and
+        consider every piece of information provided in the intake form, without overlooking
+        any details.
         
-        IMPORTANT: You must ONLY reference information that was explicitly provided in the intake form. 
-        DO NOT add, assume, or infer any symptoms, medications, or medical conditions that were not 
+        IMPORTANT: The patient's BMI has been calculated based on their height and weight,
+        and a health assessment has been provided. You MUST acknowledge this BMI assessment
+        in your initial response, discussing the implications for their health and incorporating
+        the recommendations into your overall assessment.
+        
+        You must ONLY reference information that was explicitly provided in the intake form.
+        DO NOT add, assume, or infer any symptoms, medications, or medical conditions that were not
         explicitly mentioned in the patient's information. Stick strictly to the facts provided.
         
-        You must explicitly tell the patient that you have reviewed their provided information, 
-        referencing specific details from their intake form to demonstrate your thorough understanding, 
-        and then begin with questions that best match the context of their specific situation. 
-        Your main purpose is to analyze this information and ask follow-up questions in a compassionate, 
-        structured manner. You utilize a methodical approach of asking one question at a time, 
-        carefully listening to each response before proceeding to your next inquiry. This measured 
-        pace allows you to thoroughly understand the patient's symptoms, build a comprehensive picture 
-        of their health concerns, and ensure they feel heard rather than overwhelmed. 
+        You must explicitly tell the patient that you have reviewed their provided information,
+        referencing specific details from their intake form to demonstrate your thorough understanding,
+        and then begin with questions that best match the context of their specific situation.
+        Your main purpose is to analyze this information and ask follow-up questions in a compassionate,
+        structured manner. You utilize a methodical approach of asking one question at a time,
+        carefully listening to each response before proceeding to your next inquiry. This measured
+        pace allows you to thoroughly understand the patient's symptoms, build a comprehensive picture
+        of their health concerns, and ensure they feel heard rather than overwhelmed.
         
-        After gathering sufficient information, you should provide a diagnosis based on the patient's 
-        symptoms and medical history, develop an appropriate treatment plan, recommend necessary tests 
-        that should be conducted, suggest scheduling an appointment if needed, and determine the best 
-        course of action for the patient. Your recommendations should be specific and actionable. 
+        After gathering sufficient information, you should provide a diagnosis based on the patient's
+        symptoms and medical history, develop an appropriate treatment plan, recommend necessary tests
+        that should be conducted, suggest scheduling an appointment if needed, and determine the best
+        course of action for the patient. Your recommendations should be specific and actionable.
         
-        Throughout your interaction, maintain a professional yet compassionate tone, balancing clinical 
-        accuracy with accessible language that addresses both the medical and emotional aspects of the 
+        Throughout your interaction, maintain a professional yet compassionate tone, balancing clinical
+        accuracy with accessible language that addresses both the medical and emotional aspects of the
         patient's experience."""
         
         st.session_state.agent = Agent(
             name="Virtual Doctor Assistant",
             instructions=instructions,
-            model="gpt-4o"
+            model="o4-mini-2025-04-16"
         )
         
         # Initialize the agent's system message
@@ -151,6 +156,24 @@ def format_patient_summary():
     summary += f"Height: {p['physical']['height']} {p['physical']['height_unit']}\n"
     summary += f"Weight: {p['physical']['weight']} {p['physical']['weight_unit']}\n"
     
+    # Calculate BMI if height and weight are provided
+    if p['physical']['height'] and p['physical']['weight']:
+        try:
+            bmi_info = st.session_state.agent.calculate_bmi(
+                height=float(p['physical']['height']),
+                weight=float(p['physical']['weight']),
+                height_unit=p['physical']['height_unit'],
+                weight_unit=p['physical']['weight_unit']
+            )
+            
+            summary += f"\nBMI Assessment:\n"
+            summary += f"BMI Value: {bmi_info['bmi_value']}\n"
+            summary += f"Category: {bmi_info['bmi_category']}\n"
+            summary += f"Assessment: {bmi_info['health_assessment']}\n"
+            summary += f"Recommendations: {bmi_info['recommendations']}\n"
+        except Exception as e:
+            st.error(f"Error calculating BMI: {e}")
+    
     # Symptoms
     summary += f"Primary Complaint: {p['symptoms']['primary_complaint']}\n"
     summary += f"Duration: {p['symptoms']['duration']}\n"
@@ -173,7 +196,7 @@ def format_patient_summary():
     return summary
 
 # Function to call the OpenAI API
-def call_openai_api(user_input, model="gpt-4o"):
+def call_openai_api(user_input, model="o4-mini-2025-04-16"):
     try:
         if 'client' not in st.session_state or 'agent_messages' not in st.session_state:
             return "Error: OpenAI client or agent not properly initialized."
@@ -191,7 +214,7 @@ def call_openai_api(user_input, model="gpt-4o"):
         response = st.session_state.client.chat.completions.create(
             model=model_to_use,
             messages=st.session_state.agent_messages,
-            temperature=0
+            #temperature=0
         )
         
         # Get the assistant's response
