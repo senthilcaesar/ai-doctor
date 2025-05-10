@@ -3,11 +3,105 @@ from openai import OpenAI
 import os
 import ui
 import time
-from agents import Agent
+import asyncio
+import nest_asyncio
+import json
+import re
+from agents import Agent, Runner
+
+# Apply nest_asyncio to allow nested event loops (required for Streamlit)
+nest_asyncio.apply()
 
 # Initialize UI
 ui.set_page_config()
 ui.load_custom_css()
+
+# Function to calculate BMI using Agent and Runner
+def calculate_bmi(client, height, weight, height_unit="cm", weight_unit="kg"):
+    """
+    Calculate BMI and provide health assessment using Agent and Runner.
+    
+    Args:
+        client: OpenAI client instance
+        height (float): Height value
+        weight (float): Weight value
+        height_unit (str): Unit of height ('cm' or 'ft')
+        weight_unit (str): Unit of weight ('kg' or 'lb')
+        
+    Returns:
+        dict: BMI information including:
+            - bmi_value: The calculated BMI value
+            - bmi_category: The BMI category
+            - health_assessment: Detailed health assessment
+            - recommendations: General health recommendations
+    """
+    try:
+        # Create a BMI calculation agent
+        bmi_agent = Agent(
+            name="BMI Calculator",
+            instructions=f"""You are a BMI calculator. Calculate the BMI for a person with:
+            - Height: {height} {height_unit}
+            - Weight: {weight} {weight_unit}
+            
+            1. Convert measurements to metric units if necessary (height in meters, weight in kg)
+            2. Calculate BMI using the formula: weight (kg) / (height (m))²
+            3. Determine the BMI category (underweight, normal weight, overweight, obese)
+            4. Provide a health assessment based on the BMI category
+            5. Suggest health recommendations based on the BMI category
+            
+            Format your response as a JSON object with these keys:
+            - bmi_value: The calculated BMI value (rounded to 1 decimal place)
+            - bmi_category: The BMI category
+            - health_assessment: A brief health assessment
+            - recommendations: General health recommendations
+            """,
+            model="o4-mini-2025-04-16"
+        )
+        
+        # Run the agent
+        prompt = f"Calculate BMI for height: {height} {height_unit}, weight: {weight} {weight_unit}"
+        result = Runner.run_sync(bmi_agent, prompt)
+        
+        # Parse the response
+        response = result.final_output
+        
+        try:
+            # Try to parse as JSON
+            bmi_data = json.loads(response)
+            return bmi_data
+        except json.JSONDecodeError:
+            # If not valid JSON, extract information using regex
+            # Extract BMI value
+            bmi_value_match = re.search(r'bmi_value"?\s*:?\s*(\d+\.?\d*)', response)
+            bmi_value = float(bmi_value_match.group(1)) if bmi_value_match else 0.0
+            
+            # Extract BMI category
+            bmi_category_match = re.search(r'bmi_category"?\s*:?\s*"([^"]+)"', response)
+            bmi_category = bmi_category_match.group(1) if bmi_category_match else "Unknown"
+            
+            # Extract health assessment
+            health_assessment_match = re.search(r'health_assessment"?\s*:?\s*"([^"]+)"', response)
+            health_assessment = health_assessment_match.group(1) if health_assessment_match else ""
+            
+            # Extract recommendations
+            recommendations_match = re.search(r'recommendations"?\s*:?\s*"([^"]+)"', response)
+            recommendations = recommendations_match.group(1) if recommendations_match else ""
+            
+            return {
+                "bmi_value": round(bmi_value, 1),
+                "bmi_category": bmi_category,
+                "health_assessment": health_assessment,
+                "recommendations": recommendations
+            }
+    except Exception as e:
+        # Return a default response in case of error
+        return {
+            "bmi_value": 0.0,
+            "bmi_category": "Error",
+            "health_assessment": f"An error occurred while calculating BMI: {str(e)}",
+            "recommendations": "Please consult with a healthcare provider for accurate BMI assessment."
+        }
+
 
 # Initialize session state variables if they don't exist
 if 'messages' not in st.session_state:
@@ -84,6 +178,7 @@ if 'agent' not in st.session_state:
         accuracy with accessible language that addresses both the medical and emotional aspects of the
         patient's experience."""
         
+        # Create the agent using the OpenAI Agents Python library
         st.session_state.agent = Agent(
             name="Virtual Doctor Assistant",
             instructions=instructions,
@@ -159,7 +254,8 @@ def format_patient_summary():
     # Calculate BMI if height and weight are provided
     if p['physical']['height'] and p['physical']['weight']:
         try:
-            bmi_info = st.session_state.agent.calculate_bmi(
+            bmi_info = calculate_bmi(
+                client=st.session_state.client,
                 height=float(p['physical']['height']),
                 weight=float(p['physical']['weight']),
                 height_unit=p['physical']['height_unit'],
