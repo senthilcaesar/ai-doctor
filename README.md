@@ -7,13 +7,13 @@
 
 A futuristic, AI inspired virtual doctor assistant application built with Streamlit and powered by OpenAI's GPT models. This application simulates a virtual doctor that collects patient health information through an interactive form and allows patients to discuss their health concerns with an AI assistant.
 
-## 🚀 Live Demo
+## Live Demo
 
 The application is live at: **[https://ai-doctor-v1.streamlit.app/](https://ai-doctor-v1.streamlit.app/)**
 
 This Virtual Doctor Assistant helps users assess their health by collecting patient information through an interactive form and providing personalized health insights. It calculates BMI based on height and weight, offers health recommendations, and enables users to discuss their health concerns through an AI-powered chat interface. The assistant analyzes symptoms, provides general health guidance, and creates a seamless, futuristic healthcare experience—all while maintaining that this is for demonstration purposes only and not a replacement for professional medical advice.
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **Frontend**: Streamlit
 - **Backend**: Python
@@ -22,12 +22,12 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 - **Data Handling**: Pandas
 - **Styling**: Custom CSS
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Python 3.9 or higher
 - OpenAI API key
 
-## 🚀 Installation
+## Installation
 
 1. Clone the repository:
 
@@ -54,7 +54,7 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
    OPENAI_API_KEY = "your-api-key-here"
    ```
 
-## 🏃‍♂️ Usage
+## Usage
 
 1. Run the Streamlit application:
 
@@ -90,7 +90,7 @@ virtual-doctor-assistant/
 └── README.md              # Project documentation
 ```
 
-## 🔍 Implementation Details
+## Implementation Details
 
 ### Architecture
 
@@ -108,7 +108,7 @@ The application uses OpenAI's GPT models and Agents framework to power the virtu
 - The assistant maintains a conversational history for context-aware responses
 - Specialized agents handle specific tasks like BMI calculation
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - Add authentication for patient privacy
 - Implement data encryption for sensitive information
@@ -119,18 +119,6 @@ The application uses OpenAI's GPT models and Agents framework to power the virtu
 - Create a mobile-friendly version
 - Expand health metrics beyond BMI (blood pressure, cholesterol, etc.)
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgements
-
-- [Streamlit](https://streamlit.io/) for the amazing web framework
-- [OpenAI](https://openai.com/) for the powerful language models and Agents framework
-- [Pandas](https://pandas.pydata.org/) for data handling
-
----
-
-<p align="center">
-  Made with ❤️ for a healthier future
-</p>
