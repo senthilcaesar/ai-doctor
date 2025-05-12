@@ -118,7 +118,7 @@ def initialize_patient_info():
     return {
         "basic": {"name": "", "age": "", "gender": ""},
         "physical": {"height": "", "height_unit": "cm", "weight": "", "weight_unit": "kg"},
-        "symptoms": {"primary_complaint": "", "duration": "", "severity": 5, "additional": []},
+        "symptoms": {"primary_complaint": "", "duration": "", "severity": 1, "additional": []},
         "medical_history": {"chronic_conditions": [], "surgeries": ""},
         "medications": {"current_meds": "", "allergies": ""},
         "family_history": {"conditions": ""}
@@ -142,7 +142,8 @@ if 'client' not in st.session_state:
 if 'agent' not in st.session_state:
     try:
         # Create the agent for configuration
-        instructions = """You are a virtual doctor assistant. Note that the patient's
+        instructions = """You are a virtual doctor assistant. Always refer to yourself as 'your virtual doctor assistant'
+        and NEVER use any specific names like 'Dr. Smith' or any other doctor name. Note that the patient's
         basic information is already provided to you in the session through an intake form,
         including their demographics, physical metrics, primary symptoms, medical history,
         medications, and family history. When the user starts the chat, you should first
@@ -176,7 +177,11 @@ if 'agent' not in st.session_state:
         
         Throughout your interaction, maintain a professional yet compassionate tone, balancing clinical
         accuracy with accessible language that addresses both the medical and emotional aspects of the
-        patient's experience."""
+        patient's experience.
+        
+        IMPORTANT REMINDER: Always refer to yourself as 'your virtual doctor assistant' and NEVER use any
+        specific names like 'Dr. Smith' or any other doctor name. Maintain this consistent identity
+        throughout all interactions."""
         
         # Create the agent using the OpenAI Agents Python library
         st.session_state.agent = Agent(
@@ -212,30 +217,51 @@ CHRONIC_CONDITIONS = [
 
 # Function to submit the form
 def submit_form():
-    st.session_state.intake_completed = True
-    
-    # Format patient info into a message and add to conversation history
-    patient_summary = format_patient_summary()
-    
-    # Add the patient info as the first message from the assistant to the UI
-    st.session_state.messages.append({
-        "role": "assistant", 
-        "content": f"Thank you for providing your information. I'll be your virtual doctor assistant today. {patient_summary}\n\nHow can I help you today?"
-    })
-    
-    # Add the patient info to the agent context
-    if 'agent_messages' in st.session_state:
-        try:
-            # Add a system message with the patient information
-            st.session_state.agent_messages.append({
-                "role": "system",
-                "content": f"The patient has provided the following information through an intake form: {patient_summary}"
-            })
-        except Exception as e:
-            st.error(f"Error submitting form to agent: {e}")
-    
-    # Switch to virtual doctor view
-    st.session_state.current_view = "virtual_doctor"
+    try:
+        # Set intake as completed
+        st.session_state.intake_completed = True
+        
+        # Format patient info into a message and add to conversation history
+        patient_summary = format_patient_summary()
+        
+        # Add the patient info as the first message from the assistant to the UI
+        if 'messages' not in st.session_state:
+            st.session_state.messages = []
+            
+        # Get patient info for personalized message
+        p = st.session_state.patient_info
+        
+        # Create personalized greeting
+        name_greeting = f", {p['basic']['name']}" if p['basic']['name'] else ""
+        height_info = f"{p['physical']['height']} {p['physical']['height_unit']}" if p['physical']['height'] else "not provided"
+        weight_info = f"{p['physical']['weight']} {p['physical']['weight_unit']}" if p['physical']['weight'] else "not provided"
+        symptoms_info = f", as well as your {', '.join(p['symptoms']['additional'])}" if p['symptoms']['additional'] else ""
+        conditions_info = f", and note that you have {', '.join(p['medical_history']['chronic_conditions'])}" if p['medical_history']['chronic_conditions'] else ""
+        
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": f"Thank you for providing your information{name_greeting}. I'll be your virtual doctor assistant today.\n\nWhat brought you here today? I'd like to understand your current health concerns in your own words before we proceed."
+        })
+        
+        # Add the patient info to the agent context
+        if 'agent_messages' in st.session_state:
+            try:
+                # Add a system message with the patient information
+                st.session_state.agent_messages.append({
+                    "role": "system",
+                    "content": f"The patient has provided the following information through an intake form: {patient_summary}"
+                })
+            except Exception as e:
+                st.error(f"Error submitting form to agent: {e}")
+        
+        # Switch to virtual doctor view
+        st.session_state.current_view = "virtual_doctor"
+        
+    except Exception as e:
+        st.error(f"Error submitting form: {e}")
+        # Ensure we still set these values even if there's an error
+        st.session_state.intake_completed = True
+        st.session_state.current_view = "virtual_doctor"
 
 # Format patient information into a readable summary
 def format_patient_summary():
@@ -243,51 +269,69 @@ def format_patient_summary():
     
     # Basic info
     summary = f"Patient Information:\n"
-    summary += f"Name: {p['basic']['name']}\n"
-    summary += f"Age: {p['basic']['age']}\n"
-    summary += f"Gender: {p['basic']['gender']}\n"
+    summary += f"Name: {p['basic']['name'] if p['basic']['name'] else 'Not provided'}\n"
+    summary += f"Age: {p['basic']['age'] if p['basic']['age'] else 'Not provided'}\n"
+    summary += f"Gender: {p['basic']['gender'] if p['basic']['gender'] else 'Not provided'}\n"
     
     # Physical metrics
-    summary += f"Height: {p['physical']['height']} {p['physical']['height_unit']}\n"
-    summary += f"Weight: {p['physical']['weight']} {p['physical']['weight_unit']}\n"
+    height_str = f"{p['physical']['height']} {p['physical']['height_unit']}" if p['physical']['height'] else 'Not provided'
+    weight_str = f"{p['physical']['weight']} {p['physical']['weight_unit']}" if p['physical']['weight'] else 'Not provided'
+    summary += f"Height: {height_str}\n"
+    summary += f"Weight: {weight_str}\n"
     
-    # Calculate BMI if height and weight are provided
-    if p['physical']['height'] and p['physical']['weight']:
-        try:
-            bmi_info = calculate_bmi(
-                client=st.session_state.client,
-                height=float(p['physical']['height']),
-                weight=float(p['physical']['weight']),
-                height_unit=p['physical']['height_unit'],
-                weight_unit=p['physical']['weight_unit']
-            )
-            
-            summary += f"\nBMI Assessment:\n"
-            summary += f"BMI Value: {bmi_info['bmi_value']}\n"
-            summary += f"Category: {bmi_info['bmi_category']}\n"
-            summary += f"Assessment: {bmi_info['health_assessment']}\n"
-            summary += f"Recommendations: {bmi_info['recommendations']}\n"
-        except Exception as e:
-            st.error(f"Error calculating BMI: {e}")
+    # Calculate BMI if height and weight are provided and are valid numbers
+    try:
+        if (p['physical']['height'] and p['physical']['weight'] and
+            p['physical']['height'].strip() and p['physical']['weight'].strip()):
+            try:
+                # Try to convert to float
+                height_val = float(p['physical']['height'])
+                weight_val = float(p['physical']['weight'])
+                
+                if height_val > 0 and weight_val > 0:
+                    bmi_info = calculate_bmi(
+                        client=st.session_state.client,
+                        height=height_val,
+                        weight=weight_val,
+                        height_unit=p['physical']['height_unit'],
+                        weight_unit=p['physical']['weight_unit']
+                    )
+                    
+                    summary += f"\nBMI Assessment:\n"
+                    summary += f"BMI Value: {bmi_info['bmi_value']}\n"
+                    summary += f"Category: {bmi_info['bmi_category']}\n"
+                    summary += f"Assessment: {bmi_info['health_assessment']}\n"
+                    summary += f"Recommendations: {bmi_info['recommendations']}\n"
+            except ValueError:
+                # If conversion to float fails, skip BMI calculation
+                pass
+    except Exception as e:
+        # Catch any other exceptions that might occur
+        pass
     
     # Symptoms
-    summary += f"Primary Complaint: {p['symptoms']['primary_complaint']}\n"
-    summary += f"Duration: {p['symptoms']['duration']}\n"
-    summary += f"Severity (1-10): {p['symptoms']['severity']}\n"
+    summary += f"Primary Complaint: {p['symptoms']['primary_complaint'] if p['symptoms']['primary_complaint'] else 'Not provided'}\n"
+    summary += f"Duration: {p['symptoms']['duration'] if p['symptoms']['duration'] else 'Not provided'}\n"
+    summary += f"Severity (1-10): {p['symptoms']['severity'] if p['symptoms']['severity'] else 'Not provided'}\n"
     if p['symptoms']['additional']:
         summary += f"Additional Symptoms: {', '.join(p['symptoms']['additional'])}\n"
+    else:
+        summary += "Additional Symptoms: None reported\n"
     
     # Medical history
     if p['medical_history']['chronic_conditions']:
         summary += f"Chronic Conditions: {', '.join(p['medical_history']['chronic_conditions'])}\n"
-    summary += f"Surgeries/Hospitalizations: {p['medical_history']['surgeries']}\n"
+    else:
+        summary += "Chronic Conditions: None reported\n"
+        
+    summary += f"Surgeries/Hospitalizations: {p['medical_history']['surgeries'] if p['medical_history']['surgeries'] else 'None reported'}\n"
     
     # Medications and allergies
-    summary += f"Current Medications: {p['medications']['current_meds']}\n"
-    summary += f"Allergies: {p['medications']['allergies']}\n"
+    summary += f"Current Medications: {p['medications']['current_meds'] if p['medications']['current_meds'] else 'None reported'}\n"
+    summary += f"Allergies: {p['medications']['allergies'] if p['medications']['allergies'] else 'None reported'}\n"
     
     # Family history
-    summary += f"Family History: {p['family_history']['conditions']}\n"
+    summary += f"Family History: {p['family_history']['conditions'] if p['family_history']['conditions'] else 'None reported'}\n"
     
     return summary
 

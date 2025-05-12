@@ -15,35 +15,120 @@ def load_custom_css():
     st.markdown("""
     <style>
         /* Import fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;700&family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+        
+        /* Force light mode */
+        :root {
+            color-scheme: light only !important;
+        }
+        
+        /* Force light mode for all elements */
+        html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+            color-scheme: light only !important;
+        }
+        
+        /* Force light mode for Streamlit elements */
+        .stApp, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], [data-testid="stSidebarContent"], .main, .block-container, [data-testid="stVerticalBlock"], [data-testid="stHorizontalBlock"] {
+            color-scheme: light only !important;
+        }
         
         /* Theme colors */
         :root {
-            --primary-color: #00003c;
-            --primary-light: #0000a0;
-            --accent-color: #7B42F6;
-            --text-color: #333333;
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F0F0F0;
+            /* Light theme color palette */
+            --primary-color: #00003c;  /* Dark navy blue */
+            --primary-light: #0000a0;  /* Lighter navy blue */
+            --primary-dark: #000020;  /* Darker navy blue */
+            --accent-color: #7B42F6;  /* Neon purple */
+            --accent-hover: #9668FA;  /* Lighter neon purple */
+            --warning-color: #FFD600;  /* Neon yellow */
+            --success-color: #00FF94;  /* Neon green */
+            --info-color: #00003c;  /* Dark navy blue */
+            --error-color: #FF3D71;  /* Neon red */
+            
+            /* Text colors */
+            --text-color: #333333;  /* Dark gray for text */
+            --text-muted: #666666;  /* Medium gray for muted text */
+            --text-light: #999999;  /* Light gray for light text */
+            
+            /* Background colors */
+            --bg-primary: #FFFFFF;  /* White background */
+            --bg-secondary: #F0F0F0;  /* Light gray background */
+            --card-bg: #FFFFFF;  /* White card background */
+            
+            /* UI elements */
             --border-radius: 16px;
-            --neon-glow-cyan: 0 0 10px rgba(0, 0, 60, 0.3);
-            --neon-glow-magenta: 0 0 10px rgba(255, 0, 228, 0.3);
+            --border-radius-lg: 24px;
+            --border-radius-sm: 12px;
+            --border-radius-full: 9999px;
+            
+            /* Glows and shadows */
+            --neon-glow-cyan: 0 0 5px rgba(0, 0, 60, 0.3), 0 0 10px rgba(0, 0, 60, 0.2);
+            --neon-glow-cyan-intense: 0 0 10px rgba(0, 0, 60, 0.5), 0 0 15px rgba(0, 0, 60, 0.3);
+            --neon-glow-magenta: 0 0 5px rgba(255, 0, 228, 0.3), 0 0 10px rgba(255, 0, 228, 0.2);
+            --neon-glow-magenta-intense: 0 0 10px rgba(255, 0, 228, 0.5), 0 0 15px rgba(255, 0, 228, 0.3);
+            --neon-glow-purple: 0 0 5px rgba(123, 66, 246, 0.3), 0 0 10px rgba(123, 66, 246, 0.2);
+            --neon-glow-yellow: 0 0 5px rgba(255, 214, 0, 0.3), 0 0 10px rgba(255, 214, 0, 0.2);
+            --neon-glow-green: 0 0 5px rgba(0, 255, 148, 0.3), 0 0 10px rgba(0, 255, 148, 0.2);
+            
             --box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.05);
+            --box-shadow-hover: 0 4px 15px -2px rgba(0, 0, 0, 0.1);
+            --box-shadow-md: 0 4px 15px -3px rgba(0, 0, 0, 0.07);
+            --box-shadow-lg: 0 8px 25px -5px rgba(0, 0, 0, 0.08);
+            
+            /* Sidebar specific */
+            --sidebar-bg: #F0F0F0;
+            --sidebar-element-bg: #FFFFFF;
+            --sidebar-element-active-bg: linear-gradient(135deg, #64B5F6, #42A5F5);
+            --sidebar-element-active-color: #FFFFFF;
+            --sidebar-element-color: #333333;
+            --sidebar-text-color: #333333;
+            --sidebar-accent-color: #0066CC;
+            
+            /* Transitions */
+            --transition-speed: 0.3s;
         }
         
-        /* Typography */
+        /* Typography - Futuristic sci-fi fonts */
         body {
-            font-family: 'Share Tech Mono', sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             color: var(--text-color);
+            line-height: 1.6;
+            letter-spacing: 0.03em;
+            background-color: var(--bg-primary);
         }
         
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Share Tech Mono', sans-serif;
+            font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            text-transform: uppercase;
+            margin-bottom: 1rem;
             letter-spacing: 0.05em;
+            line-height: 1.2;
+            text-transform: uppercase;
         }
         
+        h1 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            position: relative;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--text-color);
+            position: relative;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        p {
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+        }
+        
+        /* Monospace for data displays */
         .neo-data {
             font-family: 'Share Tech Mono', monospace;
             letter-spacing: 0.05em;
@@ -52,15 +137,46 @@ def load_custom_css():
         /* Layout & Structure */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
+        header {display: none !important;}
         
-        /* Sidebar adjustments */
+        /* Force the entire app to take full height */
+        .stApp {
+            margin-top: -4rem !important;
+            background-color: var(--bg-primary);
+        }
+        
+        /* App container settings */
+        .appview-container {
+            padding-top: 0 !important;
+        }
+        
+        /* Sidebar adjustments - futuristic panel */
         section[data-testid="stSidebar"] {
+            top: 0 !important;
+            padding-top: 1rem !important;
             background: var(--bg-secondary);
             border-right: 1px solid #e0e0e0;
             box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
         }
         
-        /* Badges */
+        [data-testid="stSidebarContent"] {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Main content adjustments */
+        .main .block-container {
+            padding-top: 2rem !important;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Ensure proper overflow handling */
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Badges with hover effects */
         .neo-badge, .neo-upgrade-badge {
             display: inline-flex;
             align-items: center;
@@ -71,6 +187,7 @@ def load_custom_css():
             letter-spacing: 0.1em;
             text-transform: uppercase;
             border-radius: 8px;
+            transition: all var(--transition-speed) ease;
         }
         
         .neo-badge {
@@ -80,6 +197,12 @@ def load_custom_css():
             box-shadow: var(--neon-glow-cyan);
         }
         
+        .neo-badge:hover {
+            background-color: rgba(0, 0, 60, 0.15);
+            box-shadow: var(--neon-glow-cyan-intense);
+            transform: translateY(-2px);
+        }
+        
         .neo-upgrade-badge {
             background-color: rgba(255, 0, 228, 0.1);
             color: var(--primary-light);
@@ -87,30 +210,136 @@ def load_custom_css():
             box-shadow: var(--neon-glow-magenta);
         }
         
-        /* Tab styling */
+        .neo-upgrade-badge:hover {
+            background-color: rgba(255, 0, 228, 0.15);
+            box-shadow: var(--neon-glow-magenta-intense);
+            transform: translateY(-2px);
+        }
+        
+        /* Futuristic tab styling */
         .stTabs [data-baseweb="tab-list"] {
             gap: 10px;
             border-bottom: none;
+            padding-bottom: 0;
+            background: transparent;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
         }
         
         .stTabs [data-baseweb="tab"] {
             padding: 16px 30px 16px 16px !important;
+            margin: 5px 0 !important;
             border-radius: var(--border-radius) !important;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
             background-color: #FFFFFF !important;
+            color: #000000 !important;
             border: 1px solid rgba(0, 0, 60, 0.2) !important;
             font-family: 'Share Tech Mono', monospace !important;
             font-weight: 700 !important;
+            box-shadow: var(--box-shadow) !important;
+            position: relative;
+            overflow: hidden;
             text-transform: uppercase !important;
+            letter-spacing: 0.1em !important;
+            font-size: 0.9rem !important;
+            min-width: 200px;
+            text-align: center;
+            width: auto !important;
+            box-sizing: border-box !important;
+        }
+        
+        .stTabs [data-baseweb="tab"]::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(229, 228, 226, 0.0);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stTabs [data-baseweb="tab"]:hover::before {
+            opacity: 1;
+        }
+        
+        /* Only apply hover effects to non-selected tabs */
+        .stTabs [data-baseweb="tab"]:not([aria-selected="true"]):hover {
+            background-color: #E5E4E2 !important;
+            border: 1px solid var(--primary-color) !important;
+            transform: translateY(-2px) !important;
         }
         
         .stTabs [aria-selected="true"] {
             background-color: #87CEEB !important;
             color: var(--primary-color) !important;
-            border: 1px solid var(--primary-color) !important;
+            font-weight: 700 !important;
             box-shadow: var(--neon-glow-cyan) !important;
+            border: 1px solid var(--primary-color) !important;
         }
         
-        /* Card styling */
+        /* Completely remove any red line or indicator from selected tabs */
+        .stTabs [data-baseweb="tab"][aria-selected="true"]::after,
+        .stTabs [data-baseweb="tab"][aria-selected="true"]::before,
+        .stTabs [data-baseweb="tab-list"] [data-baseweb="tab"][aria-selected="true"]::after,
+        .stTabs [data-baseweb="tab-list"] [data-baseweb="tab"][aria-selected="true"]::before {
+            display: none !important;
+            content: none !important;
+            border: none !important;
+            background: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+        
+        /* Remove any hover effects that might show red lines */
+        .stTabs [data-baseweb="tab-list"] [data-baseweb="tab"][aria-selected="true"]:hover::after,
+        .stTabs [data-baseweb="tab-list"] [data-baseweb="tab"][aria-selected="true"]:hover::before {
+            display: none !important;
+            content: none !important;
+            border: none !important;
+            background: none !important;
+        }
+        
+        /* Remove any indicator or highlight elements */
+        .stTabs [data-baseweb="tab-highlight"],
+        .stTabs [data-baseweb="tab-border"],
+        .stTabs [role="tablist"] [data-baseweb="tab-highlight"],
+        .stTabs [role="tablist"] [data-baseweb="tab-border"] {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            border: none !important;
+            background: none !important;
+        }
+        
+        .stTabs [aria-selected="true"]::after {
+            content: "▶";
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            text-shadow: var(--neon-glow-cyan);
+        }
+        
+        /* Fix spacing around tab panels */
+        .stTabs [data-baseweb="tab-panel"] {
+            padding-top: 1.5rem !important;
+            background: #f5f5f5;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid #e0e0e0;
+            padding: 1.5rem !important;
+            margin-top: 0.8rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        /* Card styling with hover effects */
         .neo-card {
             background-color: white;
             border-radius: var(--border-radius);
@@ -118,6 +347,13 @@ def load_custom_css():
             margin-bottom: 1.5rem;
             border: 1px solid rgba(0, 0, 60, 0.1);
             box-shadow: var(--box-shadow);
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .neo-card:hover {
+            border: 1px solid rgba(0, 0, 60, 0.2);
+            box-shadow: var(--box-shadow-hover);
+            transform: translateY(-3px);
         }
         
         .neo-card-header {
@@ -128,6 +364,11 @@ def load_custom_css():
             color: var(--primary-color);
             letter-spacing: 0.05em;
             text-transform: uppercase;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .neo-card:hover .neo-card-header {
+            color: var(--accent-color);
         }
         
         /* Completion indicator */
@@ -153,7 +394,7 @@ def load_custom_css():
             font-weight: bold;
         }
         
-        /* Table styling */
+        /* Table styling with hover effects */
         .dataframe {
             width: 100%;
             margin-bottom: 1rem;
@@ -168,24 +409,169 @@ def load_custom_css():
             text-transform: uppercase;
             padding: 0.75rem;
             border: 1px solid rgba(0, 0, 60, 0.2);
+            transition: background-color var(--transition-speed) ease;
+        }
+        
+        .dataframe tr:hover th {
+            background-color: rgba(0, 0, 60, 0.15);
         }
         
         .dataframe td {
             padding: 0.75rem;
             border: 1px solid rgba(0, 0, 60, 0.1);
             font-family: 'Share Tech Mono', monospace;
+            transition: background-color var(--transition-speed) ease;
         }
         
-        /* Navigation buttons */
+        .dataframe tr:hover td {
+            background-color: rgba(135, 206, 235, 0.1);
+        }
+        
+        /* Navigation buttons with hover effects */
         .nav-button {
             margin-bottom: 10px;
+            transition: all var(--transition-speed) ease;
         }
         
-        /* Chat styling */
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Button styling enhancements */
+        button[data-testid="baseButton-primary"],
+        button[data-testid="baseButton-secondary"] {
+            transition: all var(--transition-speed) ease !important;
+        }
+        
+        button[data-testid="baseButton-primary"]:hover,
+        button[data-testid="baseButton-secondary"]:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: var(--box-shadow-hover) !important;
+        }
+        
+        /* Form elements hover effects */
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            transition: all var(--transition-speed) ease !important;
+            background-color: white !important;
+        }
+        
+        /* Target the actual input elements to make them white */
+        [data-baseweb="input"] input,
+        [data-baseweb="textarea"] textarea,
+        [data-baseweb="select"] input,
+        [data-baseweb="select"] .react-select__control,
+        [data-baseweb="select"] .react-select__menu {
+            background-color: white !important;
+        }
+        
+        /* Make sure the input containers have the tab panel color */
+        [data-testid="stTextInput"] > div,
+        [data-testid="stNumberInput"] > div,
+        [data-testid="stTextArea"] > div,
+        [data-baseweb="select"] > div,
+        [data-testid="stMultiSelect"] > div {
+            background-color: #f5f5f5 !important;
+        }
+        
+        /* Ensure the actual input fields are white */
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        .stSelectbox select {
+            background-color: white !important;
+        }
+        
+        input[type="text"]:hover,
+        input[type="number"]:hover,
+        textarea:hover,
+        select:hover {
+            border-color: rgba(0, 0, 60, 0.3) !important;
+            box-shadow: 0 0 5px rgba(0, 0, 60, 0.1) !important;
+            background-color: white !important;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent-color) !important;
+            box-shadow: var(--neon-glow-cyan) !important;
+            transform: translateY(-1px) !important;
+            background-color: white !important;
+        }
+        
+        /* Additional rules to ensure white input fields */
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        .stSelectbox select,
+        [data-baseweb="input"] input,
+        [data-baseweb="textarea"] textarea,
+        [data-baseweb="select"] input {
+            background-color: white !important;
+            color: var(--text-color) !important;
+        }
+        
+        /* Make dropdown menus and options white */
+        .stMultiSelect [data-baseweb="select"] div,
+        .stMultiSelect [data-baseweb="popover"] div,
+        .stMultiSelect [data-baseweb="menu"] div,
+        .stMultiSelect [data-baseweb="select-option"] div,
+        .stMultiSelect [role="listbox"],
+        .stMultiSelect [role="option"],
+        .stSelectbox [data-baseweb="select"] div,
+        .stSelectbox [data-baseweb="popover"] div,
+        .stSelectbox [data-baseweb="menu"] div,
+        .stSelectbox [data-baseweb="select-option"] div,
+        .stSelectbox [role="listbox"],
+        .stSelectbox [role="option"] {
+            background-color: white !important;
+        }
+        
+        /* Target multiselect specifically */
+        div[data-baseweb="select"] ul,
+        div[data-baseweb="select"] ul li,
+        div[data-baseweb="select"] div[role="listbox"],
+        div[data-baseweb="select"] div[role="option"],
+        div[data-baseweb="select"] div[data-testid="stMultiSelect"],
+        .stMultiSelect div[role="combobox"] {
+            background-color: white !important;
+        }
+        
+        /* Slider hover effects */
+        .stSlider:hover [data-baseweb="slider"] {
+            box-shadow: var(--neon-glow-cyan) !important;
+        }
+        
+        /* Radio button hover effects */
+        .stRadio:hover [data-testid="stRadio"] {
+            transform: translateY(-1px) !important;
+        }
+        
+        /* Checkbox hover effects */
+        .stCheckbox:hover [data-testid="stCheckbox"] {
+            transform: scale(1.05) !important;
+        }
+        
+        /* MultiSelect hover effects */
+        .stMultiSelect:hover [data-baseweb="select"] {
+            border-color: var(--accent-color) !important;
+            box-shadow: var(--neon-glow-cyan) !important;
+        }
+        
+        /* Chat styling with hover effects */
         .stChatMessage {
             padding: 1rem !important;
             margin-bottom: 1rem !important;
             border-radius: var(--border-radius) !important;
+            transition: all var(--transition-speed) ease !important;
+        }
+        
+        .stChatMessage:hover {
+            box-shadow: var(--box-shadow-hover) !important;
         }
         
         .stChatMessage p {
@@ -201,20 +587,125 @@ def load_custom_css():
         .stChatInput {
             height: 60px !important;
             font-size: 1.1rem !important;
+            transition: all var(--transition-speed) ease !important;
+        }
+        
+        .stChatInput:focus {
+            border-color: var(--accent-color) !important;
+            box-shadow: var(--neon-glow-cyan) !important;
         }
         
         /* Make chat container taller */
-        .chat-container {
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
+        [data-testid="stChatMessageContainer"] {
+            min-height: 700px !important;
         }
         
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            min-height: 500px;
-            margin-bottom: 1rem;
+        /* Apply styling to Streamlit's chat container */
+        [data-testid="stChatContainer"] {
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(240,240,240,0.8)) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            padding: 1.5rem !important;
+            position: relative !important;
+            overflow: hidden !important;
+            min-height: 800px !important;
+        }
+        
+        /* Chat animations */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Chat header styling */
+        .neo-chat-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, #429de3, #87CEEB);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .neo-chat-header h3 {
+            color: white;
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.1em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Sidebar navigation styling */
+        .sidebar-nav-header {
+            font-family: 'Share Tech Mono', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem 0;
+            color: var(--primary-color);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .sidebar-icon {
+            font-size: 1.5rem;
+            text-align: center;
+            transition: all var(--transition-speed) ease;
+        }
+        
+        /* Sidebar button container */
+        div[data-testid="column"] button {
+            transition: all var(--transition-speed) ease !important;
+        }
+        
+        div[data-testid="column"]:hover .sidebar-icon {
+            transform: scale(1.2);
+        }
+        
+        /* Expander hover effects */
+        .streamlit-expanderHeader {
+            transition: all var(--transition-speed) ease !important;
+        }
+        
+        .streamlit-expanderHeader:hover {
+            color: var(--accent-color) !important;
+            background-color: rgba(0, 0, 60, 0.05) !important;
+        }
+        
+        /* Footer styling */
+        .neo-footer {
+            text-align: center;
+            color: #888;
+            padding: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .neo-footer:hover {
+            color: var(--primary-color);
+            background-color: rgba(0, 0, 60, 0.03);
+            box-shadow: var(--neon-glow-cyan);
         }
     </style>
     """, unsafe_allow_html=True)
@@ -234,22 +725,38 @@ def display_header():
 # Sidebar for model selection and reset button
 def render_sidebar():
     with st.sidebar:
-        st.markdown("<div class='neo-card-header'>Virtual Doctor Assistant</div>", unsafe_allow_html=True)
+        # Add app title with gradient background at the top of the sidebar
+        st.markdown("""
+        <div style="background: linear-gradient(90deg, #429de3, #87CEEB);
+                    padding: 15px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+            <h1 style="color: #000000;
+                    font-family: 'Trebuchet MS', sans-serif;
+                    text-align: center;
+                    letter-spacing: 2px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
+                    VIRTUAL DOCTOR
+            </h1>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Initialize current_view in session state if it doesn't exist
         if 'current_view' not in st.session_state:
             st.session_state.current_view = "input_data"  # Default view
         
         # Navigation section
-        #st.markdown("### Navigation")
+        st.markdown("<div class='sidebar-nav-header'>Navigation</div>", unsafe_allow_html=True)
         
         # Input Data button
         col1, col2 = st.columns([1, 4])
         with col1:
-            st.markdown("📋")
+            st.markdown("<div class='sidebar-icon'>📋</div>", unsafe_allow_html=True)
         with col2:
             input_data_clicked = st.button(
-                "Input Data", 
+                "Input Data",
                 use_container_width=True,
                 type="primary" if st.session_state.current_view == "input_data" else "secondary",
                 key="input_data_button"
@@ -259,10 +766,10 @@ def render_sidebar():
         doctor_button_disabled = not st.session_state.intake_completed
         col1, col2 = st.columns([1, 4])
         with col1:
-            st.markdown("🩺")
+            st.markdown("<div class='sidebar-icon'>🩺</div>", unsafe_allow_html=True)
         with col2:
             doctor_clicked = st.button(
-                "Virtual Doctor", 
+                "Virtual Doctor",
                 use_container_width=True,
                 disabled=doctor_button_disabled,
                 type="primary" if st.session_state.current_view == "virtual_doctor" else "secondary",
@@ -297,13 +804,7 @@ def render_sidebar():
 def is_tab_complete(tab_name):
     p = st.session_state.patient_info
     
-    if tab_name == "Basic Info":
-        return p["basic"]["name"] and p["basic"]["age"] > 0
-    
-    elif tab_name == "Symptoms":
-        return p["symptoms"]["primary_complaint"] and p["symptoms"]["duration"]
-    
-    # Other tabs are optional
+    # All tabs are now optional
     return True
 
 # Function to get completion status for all tabs
@@ -313,9 +814,8 @@ def get_tab_completion_status():
 
 # Function to validate if all required fields are filled
 def validate_form_completion():
-    # Check if all required tabs are complete
-    completion_status = get_tab_completion_status()
-    return all(completion_status.values())
+    # All fields are now optional, so form is always complete
+    return True
 
 # Function to render basic info tab
 def render_basic_info(tab):
@@ -342,16 +842,14 @@ def render_basic_info(tab):
         )
     
     with col2:
-        gender = col2.radio(
+        gender = col2.selectbox(
             "Gender",
             options=["Male", "Female", "Other"],
-            index=["Male", "Female", "Other"].index(st.session_state.patient_info["basic"]["gender"]) if st.session_state.patient_info["basic"]["gender"] in ["Male", "Female", "Other"] else 0,
-            horizontal=True
+            index=["Male", "Female", "Other"].index(st.session_state.patient_info["basic"]["gender"]) if st.session_state.patient_info["basic"]["gender"] in ["Male", "Female", "Other"] else 0
         )
     
-    # Show completion status
-    if is_tab_complete("Basic Info"):
-        tab.success("Basic information complete!")
+    # All fields are optional now
+    tab.info("All fields in this tab are optional.")
     
     return name, age, gender
 
@@ -427,12 +925,13 @@ def render_symptoms(tab, COMMON_SYMPTOMS):
         )
     
     with col2:
-        severity = col2.slider(
+        severity = col2.number_input(
             "On a scale of 1-10, how severe is your main concern?",
             min_value=1,
             max_value=10,
-            value=st.session_state.patient_info["symptoms"]["severity"],
-            help="1 = Very mild, 10 = Extremely severe"
+            value=int(st.session_state.patient_info["symptoms"]["severity"]) if st.session_state.patient_info["symptoms"]["severity"] else 1,
+            help="1 = Very mild, 10 = Extremely severe",
+            step=1
         )
     
     # Additional symptoms multi-select
@@ -444,9 +943,8 @@ def render_symptoms(tab, COMMON_SYMPTOMS):
         help="Select all that apply"
     )
     
-    # Show completion status
-    if is_tab_complete("Symptoms"):
-        tab.success("Symptoms information complete!")
+    # All fields are optional now
+    tab.info("All fields in this tab are optional.")
     
     return primary_complaint, duration, severity, additional
 
@@ -527,14 +1025,15 @@ def create_two_column_table(data):
     # Create a DataFrame with just the Field and Value columns
     df = pd.DataFrame(data)
     
-    # Create HTML for a simple two-column table
+    # Create HTML for a simple two-column table with hover effects
     html = "<table style='width:100%; border-collapse: collapse;'>"
-    html += "<tr><th style='background-color: rgba(0, 0, 60, 0.1); color: #00003c; padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.2);'>Field</th>"
-    html += "<th style='background-color: rgba(0, 0, 60, 0.1); color: #00003c; padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.2);'>Value</th></tr>"
+    html += "<tr><th style='background-color: rgba(0, 0, 60, 0.1); color: #00003c; padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.2); transition: all 0.3s ease;'>Field</th>"
+    html += "<th style='background-color: rgba(0, 0, 60, 0.1); color: #00003c; padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.2); transition: all 0.3s ease;'>Value</th></tr>"
     
     for i in range(len(df)):
-        html += f"<tr><td style='padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.1);'>{df['Field'][i]}</td>"
-        html += f"<td style='padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.1);'>{df['Value'][i]}</td></tr>"
+        html += f"<tr style='transition: all 0.3s ease;' onmouseover=\"this.style.backgroundColor='rgba(135, 206, 235, 0.1)';\" onmouseout=\"this.style.backgroundColor='transparent';\">"
+        html += f"<td style='padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.1); transition: all 0.3s ease;'>{df['Field'][i]}</td>"
+        html += f"<td style='padding: 0.75rem; border: 1px solid rgba(0, 0, 60, 0.1); transition: all 0.3s ease;'>{df['Value'][i]}</td></tr>"
     
     html += "</table>"
     return html
@@ -626,12 +1125,10 @@ def render_submit_tab(tab):
     # Submit button
     tab.markdown("### Submit Your Information")
     
-    # Check if all required fields are complete
+    # All fields are now optional
     form_complete = validate_form_completion()
-    if not form_complete:
-        tab.warning("Please complete all required fields in the Basic Info and Symptoms tabs before submitting.")
-    else:
-        tab.success("All required information has been provided. You can now submit the form.")
+    # Since all fields are optional, this will always be true
+    tab.success("You can now submit the form.")
     
     submit_button = tab.button("Submit Information", type="primary", use_container_width=True)
     
@@ -692,23 +1189,13 @@ def render_chat_interface(model_option, call_openai_api):
     # Display conversation history
     st.markdown("<div class='neo-card-header'>Conversation with Virtual Doctor</div>", unsafe_allow_html=True)
     
-    # Create a container for the chat with increased height
-    st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-    
-    # Create a container for the messages with scrolling
-    st.markdown("<div class='chat-messages'>", unsafe_allow_html=True)
-    
     # Display conversation history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.write(message["content"])
     
-    st.markdown("</div>", unsafe_allow_html=True)  # Close chat-messages div
-    
     # User input area - make it larger
     user_input = st.chat_input("Type your message here...", key="chat_input")
-    
-    st.markdown("</div>", unsafe_allow_html=True)  # Close chat-container div
     
     # Process user input and generate response
     if user_input:
@@ -733,4 +1220,9 @@ def render_chat_interface(model_option, call_openai_api):
 # Function to render the footer
 def render_footer():
     st.markdown("---")
-    st.markdown("<div style='text-align: center; color: #888;'>Virtual Doctor Assistant | For demonstration purposes only</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="neo-footer">
+        <p>Virtual Doctor Assistant | Developed by: Senthil Palanivelu</p>
+        <p style="font-size: 12px; margin-top: 5px;">Version 1.0.0</p>
+    </div>
+    """, unsafe_allow_html=True)
