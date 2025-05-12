@@ -5,38 +5,13 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-00A67E)
 ![Python](https://img.shields.io/badge/Python-3.9+-3776AB)
 
-A futuristic, sci-fi inspired virtual doctor assistant application built with Streamlit and powered by OpenAI's GPT models. This application simulates a virtual doctor that collects patient health information through an interactive form and allows patients to discuss their health concerns with an AI assistant.
+A futuristic, AI inspired virtual doctor assistant application built with Streamlit and powered by OpenAI's GPT models. This application simulates a virtual doctor that collects patient health information through an interactive form and allows patients to discuss their health concerns with an AI assistant.
 
-> **Note:** This application does not provide medical advice or diagnosis. It is for demonstration purposes only.
+## 🚀 Live Demo
 
-## 🌟 Features
+The application is live at: **[https://ai-doctor-v1.streamlit.app/](https://ai-doctor-v1.streamlit.app/)**
 
-- **Patient Information Intake Form**
-
-  - Collect comprehensive patient information across multiple categories
-  - Validate required fields and provide visual feedback
-  - Review all information before submission
-
-- **BMI Calculation and Health Assessment**
-
-  - Automatically calculate BMI based on patient's height and weight
-  - Determine BMI category (underweight, normal weight, overweight, obese)
-  - Provide detailed health assessment based on BMI
-  - Offer personalized health recommendations
-  - Uses OpenAI Agents framework for intelligent analysis
-
-- **Virtual Doctor Chat**
-
-  - Discuss health concerns with an AI-powered virtual doctor
-  - Context-aware conversations based on submitted patient information
-  - BMI assessment incorporated into the doctor's initial response
-  - Support for multiple OpenAI models (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
-
-- **User Interface**
-  - Intuitive navigation between data input and virtual doctor chat
-  - Futuristic sci-fi inspired design with custom styling
-  - Responsive layout that works on various screen sizes
-  - Table-based information display for better readability
+This Virtual Doctor Assistant helps users assess their health by collecting patient information through an interactive form and providing personalized health insights. It calculates BMI based on height and weight, offers health recommendations, and enables users to discuss their health concerns through an AI-powered chat interface. The assistant analyzes symptoms, provides general health guidance, and creates a seamless, futuristic healthcare experience—all while maintaining that this is for demonstration purposes only and not a replacement for professional medical advice.
 
 ## 🛠️ Technologies Used
 
@@ -123,39 +98,6 @@ The application follows a modular architecture with separation of concerns:
 
 - **app.py**: Contains the main application logic, session state management, and API calls
 - **ui.py**: Contains all UI components, styling, and rendering functions
-
-### Key Components
-
-1. **Patient Information Form**
-
-   - Multi-tab interface for collecting different categories of information
-   - Form validation to ensure required fields are filled
-   - Custom HTML tables for displaying information in the review section
-
-2. **BMI Calculation System**
-
-   - Uses the OpenAI Agents Python library to create a specialized BMI calculator agent
-   - Converts height and weight to appropriate units for calculation
-   - Determines BMI category based on calculated value
-   - Provides detailed health assessment and recommendations
-   - Integrates seamlessly with the patient information summary
-
-3. **Navigation System**
-
-   - Sidebar navigation with "Input Data" and "Virtual Doctor" buttons
-   - Visual indicators for the active view
-   - Conditional enabling of the Virtual Doctor button
-
-4. **Chat Interface**
-
-   - Integration with OpenAI's API for generating responses
-   - Context-aware conversations using the patient's information including BMI assessment
-   - Enhanced chat UI with larger message display area
-
-5. **Session State Management**
-   - Persistent storage of patient information
-   - Conversation history tracking
-   - View state management
 
 ### AI Integration
 
