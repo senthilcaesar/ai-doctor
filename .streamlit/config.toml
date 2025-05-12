@@ -1,0 +1,19 @@
+[theme]
+# Light mode settings
+base = "light"
+primaryColor = "#64B5F6"  # Light blue color matching the gradient start
+backgroundColor = "#FFFFFF"  # White background
+secondaryBackgroundColor = "#F0F0F0"  # Light gray for secondary background
+textColor = "#333333"  # Dark gray for text
+font = "sans serif"
+
+[server]
+# Server settings
+enableStaticServing = true
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+# Browser settings
+serverAddress = "localhost"
+gatherUsageStats = false
