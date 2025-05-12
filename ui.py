@@ -317,16 +317,6 @@ def load_custom_css():
             background: none !important;
         }
         
-        .stTabs [aria-selected="true"]::after {
-            content: "▶";
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
-            color: var(--primary-color);
-            font-size: 0.75rem;
-            text-shadow: var(--neon-glow-cyan);
-        }
         
         /* Fix spacing around tab panels */
         .stTabs [data-baseweb="tab-panel"] {
