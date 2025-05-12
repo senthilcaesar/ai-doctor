@@ -7,6 +7,8 @@
 
 A futuristic, AI inspired virtual doctor assistant application built with Streamlit and powered by OpenAI's GPT models. This application simulates a virtual doctor that collects patient health information through an interactive form and allows patients to discuss their health concerns with an AI assistant.
 
+![app_logic](images/app_logic.png)
+
 ## Live Demo
 
 The application is live at: **[https://ai-doctor-v1.streamlit.app/](https://ai-doctor-v1.streamlit.app/)**
