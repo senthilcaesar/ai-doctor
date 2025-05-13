@@ -8,6 +8,7 @@ import nest_asyncio
 import json
 import re
 from agents import Agent, Runner
+from feedback_utils import initialize_feedback_session, reset_feedback_session
 
 # Apply nest_asyncio to allow nested event loops (required for Streamlit)
 nest_asyncio.apply()
@@ -15,6 +16,9 @@ nest_asyncio.apply()
 # Initialize UI
 ui.set_page_config()
 ui.load_custom_css()
+
+# Initialize feedback session
+initialize_feedback_session()
 
 # Function to calculate BMI using Agent and Runner
 def calculate_bmi(client, height, weight, height_unit="cm", weight_unit="kg"):
@@ -441,6 +445,15 @@ if reset_button:
     # Reset the agent's conversation history
     if 'system_message' in st.session_state:
         st.session_state.agent_messages = [st.session_state.system_message]
+    
+    # Reset the feedback session
+    reset_feedback_session()
+    
+    # Reset feedback display state
+    if 'show_feedback' in st.session_state:
+        st.session_state.show_feedback = False
+    if 'feedback_submitted' in st.session_state:
+        st.session_state.feedback_submitted = False
     
     st.rerun()
 

@@ -5,7 +5,10 @@ pandas
 openai-agents
 nest_asyncio
 python-dotenv
+matplotlib
+seaborn
 
 # The 'agents' module is provided by the openai-agents package
 # nest_asyncio is required for handling nested asyncio event loops
 # python-dotenv is used for loading environment variables from .env files
+# matplotlib and seaborn are used for generating charts in the feedback dashboard

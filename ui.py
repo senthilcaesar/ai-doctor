@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from feedback_utils import initialize_feedback_session, save_feedback, reset_feedback_session
 
 # Set page config
 def set_page_config():
@@ -697,6 +698,159 @@ def load_custom_css():
             background-color: rgba(0, 0, 60, 0.03);
             box-shadow: var(--neon-glow-cyan);
         }
+        
+        /* Feedback modal styling */
+        .feedback-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .feedback-modal-content {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--box-shadow-lg);
+            border: 1px solid rgba(0, 0, 60, 0.1);
+        }
+        
+        .feedback-modal-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .feedback-modal-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .feedback-modal-section-title {
+            font-family: 'Share Tech Mono', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            letter-spacing: 0.05em;
+        }
+        
+        /* Star Rating Component */
+        .star-rating-container {
+            margin: 15px 0;
+        }
+        
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row-reverse; /* Reverse to make hover effect work from left to right */
+            justify-content: center;
+        }
+        
+        .star-rating input {
+            display: none; /* Hide radio buttons */
+        }
+        
+        .star-rating label {
+            cursor: pointer;
+            font-size: 2rem;
+            color: #ddd;
+            transition: all 0.2s ease;
+            padding: 0 3px;
+        }
+        
+        /* Set color for all stars to the right of the hovered/checked star */
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #FFD700; /* Gold color for stars */
+        }
+        
+        /* Add a subtle animation effect */
+        .star-rating label:hover {
+            transform: scale(1.2);
+        }
+        
+        .rating-value-display {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00003c;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .rating-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .rating-help-text {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-submit-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1.5rem;
+            font-family: 'Share Tech Mono', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 1rem auto;
+            text-transform: uppercase;
+        }
+        
+        .feedback-submit-button:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--neon-glow-cyan);
+        }
+        
+        .feedback-skip-button {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            border-radius: var(--border-radius);
+            padding: 0.5rem 1rem;
+            font-family: 'Share Tech Mono', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0.5rem auto;
+            text-transform: uppercase;
+        }
+        
+        .feedback-skip-button:hover {
+            color: var(--text-color);
+            border-color: var(--text-color);
+            transform: translateY(-1px);
+        }
     </style>
     """, unsafe_allow_html=True)
 
@@ -1174,38 +1328,321 @@ def render_intake_form(COMMON_SYMPTOMS, CHRONIC_CONDITIONS):
     
     return submit_button
 
+# Helper function to create star rating using Streamlit components
+def create_star_rating(label, key_prefix, help_text, current_value=3):
+    """Create a star rating component using Streamlit components"""
+    
+    st.markdown(f"**{label}**")
+    st.caption(f"{help_text}")
+    
+    # Create 5 columns for the stars
+    cols = st.columns(5)
+    
+    # Create a unique key for this rating
+    if f"{key_prefix}_rating" not in st.session_state:
+        st.session_state[f"{key_prefix}_rating"] = current_value
+    
+    # Create buttons for ratings 1-5
+    for i in range(5):
+        rating = i + 1
+        with cols[i]:
+            # Use a different emoji for filled and empty stars
+            star_emoji = "⭐" if rating <= st.session_state[f"{key_prefix}_rating"] else "☆"
+            
+            # Create the button with the star emoji
+            if st.button(
+                star_emoji,
+                key=f"{key_prefix}_{rating}",
+                help=f"Rate {rating} out of 5",
+                use_container_width=True
+            ):
+                st.session_state[f"{key_prefix}_rating"] = rating
+                # Update the feedback data in session state
+                st.session_state.feedback_data[f"{key_prefix}_rating"] = rating
+                # Rerun to update the UI
+                st.rerun()
+    
+    # Display the current rating
+    st.markdown(f"<div style='text-align: center; margin-top: 5px;'><b>Your rating: {st.session_state[f'{key_prefix}_rating']} / 5</b></div>", unsafe_allow_html=True)
+    
+    return st.session_state[f"{key_prefix}_rating"]
+
+# Function to render the feedback modal
+def render_feedback_modal():
+    """Render the feedback modal for collecting user ratings and comments"""
+    
+    # Initialize feedback session if not already done
+    initialize_feedback_session()
+    
+    # Create a container for the feedback modal
+    with st.container():
+        # Create columns for layout
+        col1, col2, col3 = st.columns([1, 3, 1])
+        
+        with col2:
+            st.markdown("<div class='feedback-modal-header'>Your Feedback Matters</div>", unsafe_allow_html=True)
+            
+            # Add JavaScript to handle the star rating
+            st.markdown("""
+            <script>
+            // Function to update session state with rating values
+            function updateRatings() {
+                // Get all rating values
+                var overallRating = document.getElementById('overall_value').value;
+                var helpfulnessRating = document.getElementById('helpfulness_value').value;
+                var clarityRating = document.getElementById('clarity_value').value;
+                var empathyRating = document.getElementById('empathy_value').value;
+                var accuracyRating = document.getElementById('accuracy_value').value;
+                
+                // Store in hidden fields for form submission
+                document.getElementById('overall_rating_hidden').value = overallRating;
+                document.getElementById('helpfulness_rating_hidden').value = helpfulnessRating;
+                document.getElementById('clarity_rating_hidden').value = clarityRating;
+                document.getElementById('empathy_rating_hidden').value = empathyRating;
+                document.getElementById('accuracy_rating_hidden').value = accuracyRating;
+            }
+            </script>
+            """, unsafe_allow_html=True)
+            
+            # Overall rating
+            st.markdown("<div class='feedback-modal-section-title'>Overall Experience</div>", unsafe_allow_html=True)
+            overall_rating = create_star_rating(
+                "How would you rate your overall experience?",
+                "overall",
+                "1 = Poor, 5 = Excellent",
+                st.session_state.feedback_data["overall_rating"] if st.session_state.feedback_data["overall_rating"] > 0 else 3
+            )
+            
+            # Specific aspect ratings
+            st.markdown("<div class='feedback-modal-section-title'>Specific Aspects</div>", unsafe_allow_html=True)
+            
+            # Helpfulness rating
+            helpfulness_rating = create_star_rating(
+                "Helpfulness",
+                "helpfulness",
+                "How helpful were the responses?",
+                st.session_state.feedback_data["helpfulness_rating"] if st.session_state.feedback_data["helpfulness_rating"] > 0 else 3
+            )
+            
+            # Clarity rating
+            clarity_rating = create_star_rating(
+                "Clarity",
+                "clarity",
+                "How clear were the explanations?",
+                st.session_state.feedback_data["clarity_rating"] if st.session_state.feedback_data["clarity_rating"] > 0 else 3
+            )
+            
+            # Empathy rating
+            empathy_rating = create_star_rating(
+                "Empathy",
+                "empathy",
+                "How empathetic was the virtual doctor?",
+                st.session_state.feedback_data["empathy_rating"] if st.session_state.feedback_data["empathy_rating"] > 0 else 3
+            )
+            
+            # Accuracy rating
+            accuracy_rating = create_star_rating(
+                "Perceived Accuracy",
+                "accuracy",
+                "How accurate did the information seem?",
+                st.session_state.feedback_data["accuracy_rating"] if st.session_state.feedback_data["accuracy_rating"] > 0 else 3
+            )
+            
+            # Comments
+            st.markdown("<div class='feedback-modal-section-title'>Additional Comments</div>", unsafe_allow_html=True)
+            comments = st.text_area(
+                "Please share any additional feedback or suggestions",
+                value=st.session_state.feedback_data["comments"],
+                height=150,
+                placeholder="What did you find most helpful? What could be improved? Any other comments?"
+            )
+            
+            # Get the rating values from the hidden fields or use the current values
+            # Since we can't directly access the DOM values from Python, we'll use JavaScript to update the values
+            # and then read them from the session state when the form is submitted
+            
+            # For now, we'll use the values from the session state or the default values
+            overall_rating = st.session_state.feedback_data["overall_rating"] if st.session_state.feedback_data["overall_rating"] > 0 else 3
+            helpfulness_rating = st.session_state.feedback_data["helpfulness_rating"] if st.session_state.feedback_data["helpfulness_rating"] > 0 else 3
+            clarity_rating = st.session_state.feedback_data["clarity_rating"] if st.session_state.feedback_data["clarity_rating"] > 0 else 3
+            empathy_rating = st.session_state.feedback_data["empathy_rating"] if st.session_state.feedback_data["empathy_rating"] > 0 else 3
+            accuracy_rating = st.session_state.feedback_data["accuracy_rating"] if st.session_state.feedback_data["accuracy_rating"] > 0 else 3
+            
+            # Add JavaScript to update the session state when the form is submitted
+            st.markdown("""
+            <script>
+            // Update the hidden fields when the form is submitted
+            document.getElementById('submit_feedback_button').addEventListener('click', function() {
+                document.getElementById('overall_rating_hidden').value = document.getElementById('overall_value').value;
+                document.getElementById('helpfulness_rating_hidden').value = document.getElementById('helpfulness_value').value;
+                document.getElementById('clarity_rating_hidden').value = document.getElementById('clarity_value').value;
+                document.getElementById('empathy_rating_hidden').value = document.getElementById('empathy_value').value;
+                document.getElementById('accuracy_rating_hidden').value = document.getElementById('accuracy_value').value;
+            });
+            </script>
+            """, unsafe_allow_html=True)
+            
+            # Update feedback data in session state
+            st.session_state.feedback_data.update({
+                "overall_rating": overall_rating,
+                "helpfulness_rating": helpfulness_rating,
+                "clarity_rating": clarity_rating,
+                "empathy_rating": empathy_rating,
+                "accuracy_rating": accuracy_rating,
+                "comments": comments,
+                "model_used": st.session_state.get("model_option", ""),
+                "conversation_length": len(st.session_state.get("messages", [])),
+                "timestamp": ""  # Will be set when saving
+            })
+            
+            # Submit and skip buttons
+            submit_col, skip_col = st.columns(2)
+            
+            with submit_col:
+                submit_feedback = st.button(
+                    "Submit Feedback",
+                    type="primary",
+                    use_container_width=True,
+                    key="submit_feedback_button"
+                )
+            
+            with skip_col:
+                skip_feedback = st.button(
+                    "Skip",
+                    type="secondary",
+                    use_container_width=True,
+                    key="skip_feedback_button"
+                )
+            
+            # Handle button clicks
+            if submit_feedback:
+                # Save feedback to CSV
+                success = save_feedback(st.session_state.feedback_data)
+                
+                if success:
+                    st.success("Thank you for your feedback! It helps us improve the Virtual Doctor Assistant.")
+                    st.session_state.feedback_submitted = True
+                    
+                    # Reset patient information and end session
+                    st.session_state.intake_completed = False
+                    st.session_state.messages = []
+                    st.session_state.current_view = "input_data"  # Reset to input data view
+                    
+                    # Reset the patient info to empty
+                    if 'patient_info' in st.session_state:
+                        st.session_state.patient_info = {
+                            "basic": {"name": "", "age": "", "gender": ""},
+                            "physical": {"height": "", "height_unit": "cm", "weight": "", "weight_unit": "kg"},
+                            "symptoms": {"primary_complaint": "", "duration": "", "severity": 1, "additional": []},
+                            "medical_history": {"chronic_conditions": [], "surgeries": ""},
+                            "medications": {"current_meds": "", "allergies": ""},
+                            "family_history": {"conditions": ""}
+                        }
+                    
+                    # Reset the agent's conversation history
+                    if 'system_message' in st.session_state:
+                        st.session_state.agent_messages = [st.session_state.system_message]
+                    
+                    # Add a small delay to allow the success message to be seen
+                    import time
+                    time.sleep(2)
+                    
+                    # Redirect to input data view
+                    st.rerun()
+                else:
+                    st.error("There was an error saving your feedback. Please try again.")
+            
+            if skip_feedback:
+                st.session_state.feedback_submitted = True
+                st.info("Feedback skipped. You can provide feedback later if you wish.")
+                
+                # Reset patient information and end session
+                st.session_state.intake_completed = False
+                st.session_state.messages = []
+                st.session_state.current_view = "input_data"  # Reset to input data view
+                
+                # Reset the patient info to empty
+                if 'patient_info' in st.session_state:
+                    st.session_state.patient_info = {
+                        "basic": {"name": "", "age": "", "gender": ""},
+                        "physical": {"height": "", "height_unit": "cm", "weight": "", "weight_unit": "kg"},
+                        "symptoms": {"primary_complaint": "", "duration": "", "severity": 1, "additional": []},
+                        "medical_history": {"chronic_conditions": [], "surgeries": ""},
+                        "medications": {"current_meds": "", "allergies": ""},
+                        "family_history": {"conditions": ""}
+                    }
+                
+                # Reset the agent's conversation history
+                if 'system_message' in st.session_state:
+                    st.session_state.agent_messages = [st.session_state.system_message]
+                
+                # Add a small delay to allow the info message to be seen
+                import time
+                time.sleep(2)
+                
+                # Redirect to input data view
+                st.rerun()
+
 # Function to render the chat interface
 def render_chat_interface(model_option, call_openai_api):
-    # Display conversation history
-    st.markdown("<div class='neo-card-header'>Conversation with Virtual Doctor</div>", unsafe_allow_html=True)
+    # Store the model option in session state for feedback
+    st.session_state.model_option = model_option
     
-    # Display conversation history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
+    # Check if feedback should be shown
+    if 'show_feedback' not in st.session_state:
+        st.session_state.show_feedback = False
     
-    # User input area - make it larger
-    user_input = st.chat_input("Type your message here...", key="chat_input")
-    
-    # Process user input and generate response
-    if user_input:
-        # Display user message
-        with st.chat_message("user"):
-            st.write(user_input)
+    # If feedback is being shown, render the feedback modal
+    if st.session_state.show_feedback and not st.session_state.get('feedback_submitted', False):
+        render_feedback_modal()
+    elif st.session_state.get('feedback_submitted', False) and st.session_state.show_feedback:
+        # Reset the feedback state after submission
+        st.session_state.show_feedback = False
+        st.session_state.feedback_submitted = False
+        reset_feedback_session()
+        st.rerun()
+    else:
+        # Display conversation history
+        st.markdown("<div class='neo-card-header'>Conversation with Virtual Doctor</div>", unsafe_allow_html=True)
         
-        # Add user message to conversation history
-        st.session_state.messages.append({"role": "user", "content": user_input})
+        # Add End Session button at the top
+        end_session = st.button(
+            "End Session & Provide Feedback",
+            type="secondary",
+            key="end_session_button"
+        )
         
-        # Show a spinner while waiting for the API response
-        with st.spinner("Virtual doctor is thinking..."):
-            response = call_openai_api(user_input, model_option)
+        if end_session:
+            st.session_state.show_feedback = True
+            st.rerun()
         
-        # Display assistant response
-        with st.chat_message("assistant"):
-            st.write(response)
+        # Display conversation history
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.write(message["content"])
         
-        # Add assistant response to conversation history
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        # User input area - make it larger
+        user_input = st.chat_input("Type your message here...", key="chat_input")
+        
+        # Process user input and generate response
+        if user_input:
+            # Display user message
+            with st.chat_message("user"):
+                st.write(user_input)
+            
+            # Add user message to conversation history
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            
+            # Show a spinner while waiting for the API response
+            with st.spinner("Virtual doctor is thinking..."):
+                response = call_openai_api(user_input, model_option)
+            
+            # Display assistant response
+            with st.chat_message("assistant"):
+                st.write(response)
+            
+            # Add assistant response to conversation history
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
 # Function to render the footer
 def render_footer():

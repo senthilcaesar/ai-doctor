@@ -86,8 +86,12 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 virtual-doctor-assistant/
 ├── app.py                 # Main application file
 ├── ui.py                  # UI components and styling
+├── feedback_utils.py      # Feedback collection and analysis utilities
+├── feedback_dashboard.py  # Feedback visualization dashboard
 ├── .streamlit/            # Streamlit configuration
 │   └── secrets.toml       # API keys and secrets
+├── feedback/              # Feedback data storage directory
+│   └── user_feedback.csv  # Feedback data in CSV format
 ├── requirements.txt       # Project dependencies
 └── README.md              # Project documentation
 ```
@@ -110,6 +114,33 @@ The application uses OpenAI's GPT models and Agents framework to power the virtu
 - The assistant maintains a conversational history for context-aware responses
 - Specialized agents handle specific tasks like BMI calculation
 
+### Feedback System
+
+The application includes a comprehensive feedback collection and analysis system:
+
+- **Feedback Collection**: Users can provide feedback at the end of their session by clicking the "End Session & Provide Feedback" button
+- **Rating System**: Users can rate their experience on a scale of 1-5 stars across multiple dimensions:
+  - Overall satisfaction
+  - Helpfulness of responses
+  - Clarity of information
+  - Empathy and bedside manner
+  - Perceived accuracy of information
+- **Comments**: Users can provide qualitative feedback through an open text field
+- **Data Storage**: Feedback is stored in a CSV file for persistence and easy analysis
+- **Feedback Dashboard**: A dedicated dashboard visualizes feedback data with:
+  - Key statistics (total submissions, average ratings, positive feedback rate)
+  - Rating breakdowns by category
+  - Distribution of overall ratings
+  - Common themes extracted from comments
+  - Recent feedback entries
+  - Data export functionality
+
+To view the feedback dashboard:
+
+```bash
+streamlit run feedback_dashboard.py
+```
+
 ## Future Improvements
 
 - Add authentication for patient privacy
@@ -120,7 +151,62 @@ The application uses OpenAI's GPT models and Agents framework to power the virtu
 - Implement voice input/output capabilities
 - Create a mobile-friendly version
 - Expand health metrics beyond BMI (blood pressure, cholesterol, etc.)
+- Enhance the feedback system:
+  - Implement sentiment analysis on feedback comments
+  - Add automated alerts for negative feedback
+  - Create an admin dashboard for feedback management
+  - Develop a feedback-driven model selection system
+  - Implement A/B testing for different conversation approaches
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Areas for Improvement
+
+### 1. Evaluation and Feedback Mechanisms
+
+- No built-in way to evaluate the quality of the agent's responses
+- Lacks metrics for measuring conversation effectiveness or patient satisfaction
+- Could benefit from a feedback system to improve responses over time
+
+### 2. Diagnostic Limitations
+
+- Limited ability to process complex symptom combinations
+- No integration with medical knowledge databases for more accurate assessments
+- Lacks structured differential diagnosis capabilities
+
+### 3. Personalization Enhancements
+
+- Could better tailor responses based on patient demographics and history
+- Limited ability to remember and reference previous conversations with the same patient
+- Could improve adaptation to different communication styles and preferences
+
+### 4. Medical Context Expansion
+
+- No integration with external medical resources or guidelines
+- Limited ability to provide evidence-based recommendations
+- Could benefit from more specialized knowledge in different medical domains
+
+### 5. Technical Improvements
+
+- No built-in analytics to track usage patterns and common health concerns
+- Limited ability to handle multimedia inputs (like images of symptoms)
+- Could implement more sophisticated NLP techniques for symptom extraction
+
+### 6. User Experience Refinements
+
+- No voice input/output capabilities for accessibility
+- Limited multilingual support
+- Could improve the transition between information collection and conversation
+
+## Recommendations for Enhancement
+
+1. **Implement a feedback system** to collect user ratings and comments after each session
+2. **Integrate with medical knowledge databases** like PubMed or UpToDate for evidence-based responses
+3. **Add analytics tracking** to identify common concerns and improve responses over time
+4. **Develop specialized modules** for different medical domains (cardiology, dermatology, etc.)
+5. **Implement a structured evaluation framework** to assess response quality
+6. **Add multimedia capabilities** for patients to share images of visible symptoms
+7. **Enhance personalization** by developing patient profiles that persist across sessions
+8. **Implement voice interfaces** for improved accessibility
