@@ -22,12 +22,14 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 - **AI**: OpenAI API (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
 - **AI Framework**: OpenAI Agents Python library
 - **Data Handling**: Pandas
+- **Web Search**: SerpAPI for medical information retrieval
 - **Styling**: Custom CSS
 
 ## Prerequisites
 
 - Python 3.9 or higher
 - OpenAI API key
+- SERP API key (for medical information retrieval)
 
 ## Installation
 
@@ -51,9 +53,28 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
    pip install -r requirements.txt
    ```
 
-4. Create a `.streamlit/secrets.toml` file with your OpenAI API key:
+4. Run the setup script to configure the SERP API integration:
+
+   ```bash
+   python setup_serp_api.py
+   ```
+
+   This script will:
+
+   - Check if the required packages are installed
+   - Create a `.streamlit/secrets.toml` file if it doesn't exist
+   - Guide you through adding your API keys
+   - Test the SERP API integration
+
+   Alternatively, you can manually create a `.streamlit/secrets.toml` file with your API keys:
+
    ```toml
-   OPENAI_API_KEY = "your-api-key-here"
+   # OpenAI API key for the main assistant functionality
+   OPENAI_API_KEY = "your-openai-api-key-here"
+
+   # SERP API key for medical information retrieval
+   # Get your key at: https://serpapi.com/
+   SERP_API_KEY = "your-serp-api-key-here"
    ```
 
 ## Usage
@@ -84,16 +105,21 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 
 ```
 virtual-doctor-assistant/
-├── app.py                 # Main application file
-├── ui.py                  # UI components and styling
-├── feedback_utils.py      # Feedback collection and analysis utilities
-├── feedback_dashboard.py  # Feedback visualization dashboard
-├── .streamlit/            # Streamlit configuration
-│   └── secrets.toml       # API keys and secrets
-├── feedback/              # Feedback data storage directory
-│   └── user_feedback.csv  # Feedback data in CSV format
-├── requirements.txt       # Project dependencies
-└── README.md              # Project documentation
+├── app.py                    # Main application file
+├── ui.py                     # UI components and styling
+├── serp_service.py           # SERP API service for medical information retrieval
+├── serp_utils.py             # Utility functions for SERP API integration
+├── setup_serp_api.py         # Setup script for SERP API integration
+├── test_serp_api.py          # Test script for SERP API integration
+├── feedback_utils.py         # Feedback collection and analysis utilities
+├── feedback_dashboard.py     # Feedback visualization dashboard
+├── SERP_API_INTEGRATION.md   # Documentation for SERP API integration
+├── .streamlit/               # Streamlit configuration
+│   └── secrets.toml          # API keys and secrets
+├── feedback/                 # Feedback data storage directory
+│   └── user_feedback.csv     # Feedback data in CSV format
+├── requirements.txt          # Project dependencies
+└── README.md                 # Project documentation
 ```
 
 ## Implementation Details
@@ -113,6 +139,18 @@ The application uses OpenAI's GPT models and Agents framework to power the virtu
 - Patient information including BMI assessment is added to the conversation context
 - The assistant maintains a conversational history for context-aware responses
 - Specialized agents handle specific tasks like BMI calculation
+
+### SERP API Integration
+
+The application integrates with SERP API to provide up-to-date medical information:
+
+- **Medical Information Retrieval**: Enhances responses with current medical information from reputable sources
+- **Intelligent Enhancement**: Automatically determines when to supplement responses with web search results
+- **Source Validation**: Prioritizes trusted medical sources like Mayo Clinic, NIH, CDC, and WHO
+- **Medical Disclaimers**: Includes appropriate disclaimers with information from web searches
+- **Rate Limiting and Caching**: Implements rate limiting and caching to optimize API usage
+
+For detailed information about the SERP API integration, see [SERP_API_INTEGRATION.md](SERP_API_INTEGRATION.md).
 
 ### Feedback System
 
@@ -146,7 +184,7 @@ streamlit run feedback_dashboard.py
 - Add authentication for patient privacy
 - Implement data encryption for sensitive information
 - Add support for file uploads (medical records, images)
-- Integrate with medical databases for more accurate responses
+- ✅ Integrate with medical databases for more accurate responses (Implemented via SERP API)
 - Add multilingual support
 - Implement voice input/output capabilities
 - Create a mobile-friendly version
@@ -173,7 +211,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### 2. Diagnostic Limitations
 
 - Limited ability to process complex symptom combinations
-- No integration with medical knowledge databases for more accurate assessments
+- ✅ Integration with medical knowledge databases via SERP API for more accurate assessments
 - Lacks structured differential diagnosis capabilities
 
 ### 3. Personalization Enhancements
@@ -184,8 +222,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ### 4. Medical Context Expansion
 
-- No integration with external medical resources or guidelines
-- Limited ability to provide evidence-based recommendations
+- ✅ Integration with external medical resources through SERP API
+- ✅ Enhanced ability to provide evidence-based recommendations from trusted sources
 - Could benefit from more specialized knowledge in different medical domains
 
 ### 5. Technical Improvements
@@ -203,7 +241,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Recommendations for Enhancement
 
 1. **Implement a feedback system** to collect user ratings and comments after each session
-2. **Integrate with medical knowledge databases** like PubMed or UpToDate for evidence-based responses
+2. ✅ **Integrate with medical knowledge databases** - Implemented via SERP API integration
 3. **Add analytics tracking** to identify common concerns and improve responses over time
 4. **Develop specialized modules** for different medical domains (cardiology, dermatology, etc.)
 5. **Implement a structured evaluation framework** to assess response quality

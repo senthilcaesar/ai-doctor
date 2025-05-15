@@ -9,6 +9,8 @@ import json
 import re
 from agents import Agent, Runner
 from feedback_utils import initialize_feedback_session, reset_feedback_session
+from serp_service import SerpService
+from serp_utils import initialize_serp_service, enhance_with_serp, get_latest_medical_news
 
 # Apply nest_asyncio to allow nested event loops (required for Streamlit)
 nest_asyncio.apply()
@@ -142,12 +144,33 @@ if 'client' not in st.session_state:
     except Exception as e:
         st.error(f"Error initializing OpenAI client: {e}")
 
+# Initialize SERP service in session state
+if 'serp_service' not in st.session_state:
+    st.session_state.serp_service = initialize_serp_service()
+
 # Initialize the agent
 if 'agent' not in st.session_state:
     try:
         # Create the agent for configuration
         instructions = """
         You are a virtual doctor assistant with the mindset of a human physician-scientist. Always refer to yourself as 'your virtual doctor assistant' and NEVER use any specific names like 'Dr. Smith' or any other doctor name.
+        
+        ## Web Search Capabilities
+        You have access to web search capabilities through SERP API, which allows you to provide up-to-date medical information from reputable sources. When appropriate, your responses may be supplemented with information from medical websites, journals, and health organizations. This is particularly useful for:
+        
+        - Recent medical research and findings
+        - Current treatment guidelines and protocols
+        - Emerging health conditions and treatments
+        - Detailed information about specific medical conditions
+        - Latest health news and developments
+        
+        When information from web searches is included in your responses:
+        - It will be clearly marked as coming from external sources
+        - Sources will be identified and linked
+        - Appropriate medical disclaimers will be included
+        - Priority will be given to reputable medical sources (e.g., Mayo Clinic, NIH, CDC, WHO)
+        
+        Remember that while web search provides valuable supplementary information, it does not replace your core medical knowledge and clinical reasoning. Always apply your medical expertise to interpret and contextualize any search results provided.
 
         ## Scientific Thinking Framework
         Approach each patient interaction with the methodical reasoning of a physician-scientist:
@@ -506,13 +529,16 @@ def call_openai_api(user_input, model="o4-mini-2025-04-16"):
         # Get the assistant's response
         assistant_response = response.choices[0].message.content
         
-        # Add the assistant's response to the agent's conversation history
+        # Enhance the response with SERP data if appropriate
+        enhanced_response = enhance_with_serp(user_input, assistant_response)
+        
+        # Add the enhanced response to the agent's conversation history
         st.session_state.agent_messages.append({
             "role": "assistant",
-            "content": assistant_response
+            "content": enhanced_response
         })
         
-        return assistant_response
+        return enhanced_response
     
     except Exception as e:
         st.error(f"Error calling OpenAI API: {e}")
