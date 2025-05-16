@@ -21,6 +21,7 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 - **Backend**: Python
 - **AI**: OpenAI API (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
 - **AI Framework**: OpenAI Agents Python library
+- **Bayesian Reasoning**: Custom Bayesian probability engine for medical diagnosis
 - **Data Handling**: Pandas
 - **Web Search**: SerpAPI for medical information retrieval
 - **Styling**: Custom CSS
@@ -107,6 +108,9 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 virtual-doctor-assistant/
 ├── app.py                    # Main application file
 ├── ui.py                     # UI components and styling
+├── bayesian_engine.py        # Bayesian probability engine for medical diagnosis
+├── bayesian_integration.py   # Integration of Bayesian engine with doctor agent
+├── test_bayesian_engine.py   # Test script for Bayesian engine
 ├── serp_service.py           # SERP API service for medical information retrieval
 ├── serp_utils.py             # Utility functions for SERP API integration
 ├── setup_serp_api.py         # Setup script for SERP API integration
@@ -114,6 +118,7 @@ virtual-doctor-assistant/
 ├── feedback_utils.py         # Feedback collection and analysis utilities
 ├── feedback_dashboard.py     # Feedback visualization dashboard
 ├── SERP_API_INTEGRATION.md   # Documentation for SERP API integration
+├── BAYESIAN_ENHANCEMENT.md   # Documentation for Bayesian enhancement
 ├── .streamlit/               # Streamlit configuration
 │   └── secrets.toml          # API keys and secrets
 ├── feedback/                 # Feedback data storage directory
@@ -152,6 +157,21 @@ The application integrates with SERP API to provide up-to-date medical informati
 
 For detailed information about the SERP API integration, see [SERP_API_INTEGRATION.md](SERP_API_INTEGRATION.md).
 
+### Bayesian Reasoning
+
+The application uses a custom Bayesian probability engine for medical diagnosis:
+
+- **Probabilistic Reasoning**: Represents uncertainty using probability distributions rather than single values
+- **Prior Knowledge**: Incorporates medical knowledge in the form of prior probabilities and conditional probabilities
+- **Belief Updating**: Updates beliefs using Bayes' rule when new symptoms are observed
+- **Information-Theoretic Question Selection**: Selects questions to ask based on information gain
+- **Differential Diagnosis**: Maintains multiple hypotheses rather than prematurely focusing on a single diagnosis
+- **Internal Reasoning**: Keeps the Bayesian diagnostic assessment internal to the agent, not displaying technical probability information to patients
+
+The Bayesian engine works behind the scenes to guide the doctor agent's reasoning and question selection, providing more accurate and relevant responses without overwhelming patients with technical details.
+
+For detailed information about the Bayesian enhancement, see [BAYESIAN_ENHANCEMENT.md](BAYESIAN_ENHANCEMENT.md).
+
 ### Feedback System
 
 The application includes a comprehensive feedback collection and analysis system:
@@ -185,6 +205,7 @@ streamlit run feedback_dashboard.py
 - Implement data encryption for sensitive information
 - Add support for file uploads (medical records, images)
 - ✅ Integrate with medical databases for more accurate responses (Implemented via SERP API)
+- ✅ Implement Bayesian reasoning for medical diagnosis (Implemented)
 - Add multilingual support
 - Implement voice input/output capabilities
 - Create a mobile-friendly version
@@ -210,9 +231,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ### 2. Diagnostic Limitations
 
-- Limited ability to process complex symptom combinations
+- ✅ Limited ability to process complex symptom combinations (Improved via Bayesian reasoning)
 - ✅ Integration with medical knowledge databases via SERP API for more accurate assessments
-- Lacks structured differential diagnosis capabilities
+- ✅ Lacks structured differential diagnosis capabilities (Implemented via Bayesian reasoning)
 
 ### 3. Personalization Enhancements
 
@@ -242,9 +263,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 1. **Implement a feedback system** to collect user ratings and comments after each session
 2. ✅ **Integrate with medical knowledge databases** - Implemented via SERP API integration
-3. **Add analytics tracking** to identify common concerns and improve responses over time
-4. **Develop specialized modules** for different medical domains (cardiology, dermatology, etc.)
-5. **Implement a structured evaluation framework** to assess response quality
-6. **Add multimedia capabilities** for patients to share images of visible symptoms
-7. **Enhance personalization** by developing patient profiles that persist across sessions
-8. **Implement voice interfaces** for improved accessibility
+3. ✅ **Implement structured differential diagnosis** - Implemented via Bayesian reasoning
+4. **Add analytics tracking** to identify common concerns and improve responses over time
+5. **Develop specialized modules** for different medical domains (cardiology, dermatology, etc.)
+6. **Implement a structured evaluation framework** to assess response quality
+7. **Add multimedia capabilities** for patients to share images of visible symptoms
+8. **Enhance personalization** by developing patient profiles that persist across sessions
+9. **Implement voice interfaces** for improved accessibility

@@ -11,6 +11,7 @@ from agents import Agent, Runner
 from feedback_utils import initialize_feedback_session, reset_feedback_session
 from serp_service import SerpService
 from serp_utils import initialize_serp_service, enhance_with_serp, get_latest_medical_news
+from bayesian_integration import BayesianDoctorIntegration
 
 # Apply nest_asyncio to allow nested event loops (required for Streamlit)
 nest_asyncio.apply()
@@ -147,6 +148,10 @@ if 'client' not in st.session_state:
 # Initialize SERP service in session state
 if 'serp_service' not in st.session_state:
     st.session_state.serp_service = initialize_serp_service()
+
+# Initialize Bayesian doctor integration
+if 'bayesian_integration' not in st.session_state:
+    st.session_state.bayesian_integration = BayesianDoctorIntegration()
 
 # Initialize the agent
 if 'agent' not in st.session_state:
@@ -423,6 +428,10 @@ def submit_form():
             except Exception as e:
                 st.error(f"Error submitting form to agent: {e}")
         
+        # Initialize the Bayesian engine with the patient intake information
+        if 'bayesian_integration' in st.session_state:
+            st.session_state.bayesian_integration.update_from_intake(st.session_state.patient_info)
+        
         # Switch to virtual doctor view
         st.session_state.current_view = "virtual_doctor"
         
@@ -530,15 +539,21 @@ def call_openai_api(user_input, model="o4-mini-2025-04-16"):
         assistant_response = response.choices[0].message.content
         
         # Enhance the response with SERP data if appropriate
-        enhanced_response = enhance_with_serp(user_input, assistant_response)
+        serp_enhanced_response = enhance_with_serp(user_input, assistant_response)
+        
+        # Enhance the response with Bayesian diagnostic information
+        if 'bayesian_integration' in st.session_state:
+            bayesian_enhanced_response = st.session_state.bayesian_integration.enhance_response(user_input, serp_enhanced_response)
+        else:
+            bayesian_enhanced_response = serp_enhanced_response
         
         # Add the enhanced response to the agent's conversation history
         st.session_state.agent_messages.append({
             "role": "assistant",
-            "content": enhanced_response
+            "content": bayesian_enhanced_response
         })
         
-        return enhanced_response
+        return bayesian_enhanced_response
     
     except Exception as e:
         st.error(f"Error calling OpenAI API: {e}")
@@ -563,6 +578,10 @@ if reset_button:
     
     # Reset the feedback session
     reset_feedback_session()
+    
+    # Reset the Bayesian engine
+    if 'bayesian_integration' in st.session_state:
+        st.session_state.bayesian_integration.reset()
     
     # Reset feedback display state
     if 'show_feedback' in st.session_state:

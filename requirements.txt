@@ -2,6 +2,7 @@
 streamlit
 openai
 pandas
+numpy
 openai-agents
 nest_asyncio
 python-dotenv
@@ -14,3 +15,4 @@ serpapi
 # python-dotenv is used for loading environment variables from .env files
 # matplotlib and seaborn are used for generating charts in the feedback dashboard
 # serpapi is used for accessing search engine results via SERP API
+# numpy is used for numerical operations in the Bayesian diagnosis engine
