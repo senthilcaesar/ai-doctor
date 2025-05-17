@@ -22,6 +22,7 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 - **AI**: OpenAI API (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
 - **AI Framework**: OpenAI Agents Python library
 - **Bayesian Reasoning**: Custom Bayesian probability engine for medical diagnosis
+- **Systems Medicine**: Unified approach connecting multiple body systems
 - **Data Handling**: Pandas
 - **Web Search**: SerpAPI for medical information retrieval
 - **Styling**: Custom CSS
@@ -106,25 +107,28 @@ This Virtual Doctor Assistant helps users assess their health by collecting pati
 
 ```
 virtual-doctor-assistant/
-├── app.py                    # Main application file
-├── ui.py                     # UI components and styling
-├── bayesian_engine.py        # Bayesian probability engine for medical diagnosis
-├── bayesian_integration.py   # Integration of Bayesian engine with doctor agent
-├── test_bayesian_engine.py   # Test script for Bayesian engine
-├── serp_service.py           # SERP API service for medical information retrieval
-├── serp_utils.py             # Utility functions for SERP API integration
-├── setup_serp_api.py         # Setup script for SERP API integration
-├── test_serp_api.py          # Test script for SERP API integration
-├── feedback_utils.py         # Feedback collection and analysis utilities
-├── feedback_dashboard.py     # Feedback visualization dashboard
-├── SERP_API_INTEGRATION.md   # Documentation for SERP API integration
-├── BAYESIAN_ENHANCEMENT.md   # Documentation for Bayesian enhancement
-├── .streamlit/               # Streamlit configuration
-│   └── secrets.toml          # API keys and secrets
-├── feedback/                 # Feedback data storage directory
-│   └── user_feedback.csv     # Feedback data in CSV format
-├── requirements.txt          # Project dependencies
-└── README.md                 # Project documentation
+├── app.py                           # Main application file
+├── ui.py                            # UI components and styling
+├── bayesian_engine.py               # Bayesian probability engine for medical diagnosis
+├── bayesian_integration.py          # Integration of Bayesian engine with doctor agent
+├── systems_medicine.py              # Systems medicine model for unified healthcare approach
+├── systems_medicine_integration.py  # Integration of systems medicine with doctor agent
+├── test_bayesian_engine.py          # Test script for Bayesian engine
+├── serp_service.py                  # SERP API service for medical information retrieval
+├── serp_utils.py                    # Utility functions for SERP API integration
+├── setup_serp_api.py                # Setup script for SERP API integration
+├── test_serp_api.py                 # Test script for SERP API integration
+├── feedback_utils.py                # Feedback collection and analysis utilities
+├── feedback_dashboard.py            # Feedback visualization dashboard
+├── SERP_API_INTEGRATION.md          # Documentation for SERP API integration
+├── BAYESIAN_ENHANCEMENT.md          # Documentation for Bayesian enhancement
+├── SYSTEMS_MEDICINE_ENHANCEMENT.md  # Documentation for Systems Medicine enhancement
+├── .streamlit/                      # Streamlit configuration
+│   └── secrets.toml                 # API keys and secrets
+├── feedback/                        # Feedback data storage directory
+│   └── user_feedback.csv            # Feedback data in CSV format
+├── requirements.txt                 # Project dependencies
+└── README.md                        # Project documentation
 ```
 
 ## Implementation Details
@@ -171,6 +175,21 @@ The application uses a custom Bayesian probability engine for medical diagnosis:
 The Bayesian engine works behind the scenes to guide the doctor agent's reasoning and question selection, providing more accurate and relevant responses without overwhelming patients with technical details.
 
 For detailed information about the Bayesian enhancement, see [BAYESIAN_ENHANCEMENT.md](BAYESIAN_ENHANCEMENT.md).
+
+For detailed information about the Systems Medicine enhancement, see [SYSTEMS_MEDICINE_ENHANCEMENT.md](SYSTEMS_MEDICINE_ENHANCEMENT.md).
+
+### Systems Medicine Approach
+
+The application implements a unified healthcare approach using a Systems Medicine model:
+
+- **Interconnected Body Systems**: Views the body as one interconnected system rather than isolated compartments
+- **Cross-Domain Symptom Analysis**: Identifies connections between symptoms across different body systems
+- **Multi-Specialty Integration**: Weaves together insights from multiple medical specialties (neurology, endocrinology, gastroenterology, etc.)
+- **Lifestyle Factor Analysis**: Considers how diet, sleep, stress, and exercise affect multiple systems simultaneously
+- **Holistic Interventions**: Suggests lifestyle modifications that address multiple systems at once
+- **Pattern Recognition**: Identifies patterns that cross traditional medical boundaries
+
+The Systems Medicine model works alongside the Bayesian engine to provide a more comprehensive and holistic approach to healthcare, addressing the issue of compartmentalized medicine that often fails to connect symptoms across different specialties.
 
 ### Feedback System
 
@@ -234,6 +253,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - ✅ Limited ability to process complex symptom combinations (Improved via Bayesian reasoning)
 - ✅ Integration with medical knowledge databases via SERP API for more accurate assessments
 - ✅ Lacks structured differential diagnosis capabilities (Implemented via Bayesian reasoning)
+- ✅ Compartmentalized approach to medicine (Addressed via Systems Medicine model)
 
 ### 3. Personalization Enhancements
 
@@ -245,6 +265,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - ✅ Integration with external medical resources through SERP API
 - ✅ Enhanced ability to provide evidence-based recommendations from trusted sources
+- ✅ Unified approach that connects insights across medical specialties (Implemented via Systems Medicine)
 - Could benefit from more specialized knowledge in different medical domains
 
 ### 5. Technical Improvements
@@ -264,9 +285,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 1. **Implement a feedback system** to collect user ratings and comments after each session
 2. ✅ **Integrate with medical knowledge databases** - Implemented via SERP API integration
 3. ✅ **Implement structured differential diagnosis** - Implemented via Bayesian reasoning
-4. **Add analytics tracking** to identify common concerns and improve responses over time
-5. **Develop specialized modules** for different medical domains (cardiology, dermatology, etc.)
-6. **Implement a structured evaluation framework** to assess response quality
-7. **Add multimedia capabilities** for patients to share images of visible symptoms
-8. **Enhance personalization** by developing patient profiles that persist across sessions
-9. **Implement voice interfaces** for improved accessibility
+4. ✅ **Implement a unified healthcare approach** - Implemented via Systems Medicine model
+5. **Add analytics tracking** to identify common concerns and improve responses over time
+6. **Develop specialized modules** for different medical domains (cardiology, dermatology, etc.)
+7. **Implement a structured evaluation framework** to assess response quality
+8. **Add multimedia capabilities** for patients to share images of visible symptoms
+9. **Enhance personalization** by developing patient profiles that persist across sessions
+10. **Implement voice interfaces** for improved accessibility
