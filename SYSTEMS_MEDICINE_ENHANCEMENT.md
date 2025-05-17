@@ -84,25 +84,15 @@ The following diagram illustrates the interconnections between different body sy
 
 ```mermaid
 graph TD
-    classDef neurological fill:#8dd3c7,stroke:#333,stroke-width:1px
-    classDef endocrine fill:#ffffb3,stroke:#333,stroke-width:1px
-    classDef immune fill:#bebada,stroke:#333,stroke-width:1px
-    classDef digestive fill:#fb8072,stroke:#333,stroke-width:1px
-    classDef cardiovascular fill:#80b1d3,stroke:#333,stroke-width:1px
-    classDef respiratory fill:#fdb462,stroke:#333,stroke-width:1px
-    classDef musculoskeletal fill:#b3de69,stroke:#333,stroke-width:1px
-    classDef mental fill:#fccde5,stroke:#333,stroke-width:1px
-    classDef metabolic fill:#d9d9d9,stroke:#333,stroke-width:1px
-
-    N[Neurological System]:::neurological
-    E[Endocrine System]:::endocrine
-    I[Immune System]:::immune
-    D[Digestive System]:::digestive
-    C[Cardiovascular System]:::cardiovascular
-    R[Respiratory System]:::respiratory
-    M[Musculoskeletal System]:::musculoskeletal
-    MH[Mental Health]:::mental
-    MT[Metabolic System]:::metabolic
+    N[Neurological System]
+    E[Endocrine System]
+    I[Immune System]
+    D[Digestive System]
+    C[Cardiovascular System]
+    R[Respiratory System]
+    M[Musculoskeletal System]
+    MH[Mental Health]
+    MT[Metabolic System]
 
     N <--> E
     N <--> I
@@ -148,22 +138,18 @@ The following diagram illustrates how symptoms can span multiple body systems an
 
 ```mermaid
 graph TD
-    classDef symptom fill:#ffcc99,stroke:#333,stroke-width:1px
-    classDef system fill:#99ccff,stroke:#333,stroke-width:1px
-    classDef connection fill:#ccff99,stroke:#333,stroke-width:1px
+    H[Headache]
+    F[Fatigue]
+    D[Digestive Issues]
+    A[Anxiety]
+    J[Joint Pain]
 
-    H[Headache]:::symptom
-    F[Fatigue]:::symptom
-    D[Digestive Issues]:::symptom
-    A[Anxiety]:::symptom
-    J[Joint Pain]:::symptom
-
-    NS[Neurological System]:::system
-    ES[Endocrine System]:::system
-    IS[Immune System]:::system
-    DS[Digestive System]:::system
-    MS[Musculoskeletal System]:::system
-    MH[Mental Health]:::system
+    NS[Neurological System]
+    ES[Endocrine System]
+    IS[Immune System]
+    DS[Digestive System]
+    MS[Musculoskeletal System]
+    MH[Mental Health]
 
     H --> NS
     H --> ES
@@ -185,9 +171,9 @@ graph TD
     J --> MS
     J --> IS
 
-    GB[Gut-Brain Axis]:::connection
-    HPA[HPA Axis]:::connection
-    NI[Neuroimmune Pathway]:::connection
+    GB[Gut-Brain Axis]
+    HPA[HPA Axis]
+    NI[Neuroimmune Pathway]
 
     NS <--> GB
     DS <--> GB
@@ -212,22 +198,19 @@ This diagram shows how lifestyle factors can affect multiple body systems simult
 
 ```mermaid
 graph TD
-    classDef lifestyle fill:#ff9999,stroke:#333,stroke-width:1px
-    classDef system fill:#99ccff,stroke:#333,stroke-width:1px
+    Diet[Diet]
+    Sleep[Sleep]
+    Exercise[Exercise]
+    Stress[Stress]
 
-    Diet[Diet]:::lifestyle
-    Sleep[Sleep]:::lifestyle
-    Exercise[Exercise]:::lifestyle
-    Stress[Stress]:::lifestyle
-
-    NS[Neurological System]:::system
-    ES[Endocrine System]:::system
-    IS[Immune System]:::system
-    DS[Digestive System]:::system
-    CS[Cardiovascular System]:::system
-    MS[Musculoskeletal System]:::system
-    MH[Mental Health]:::system
-    MT[Metabolic System]:::system
+    NS[Neurological System]
+    ES[Endocrine System]
+    IS[Immune System]
+    DS[Digestive System]
+    CS[Cardiovascular System]
+    MS[Musculoskeletal System]
+    MH[Mental Health]
+    MT[Metabolic System]
 
     Diet --> DS
     Diet --> IS

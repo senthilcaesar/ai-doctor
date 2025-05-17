@@ -5,15 +5,40 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-00A67E)
 ![Python](https://img.shields.io/badge/Python-3.9+-3776AB)
 
-A futuristic, AI inspired virtual doctor assistant application built with Streamlit and powered by OpenAI's GPT models. This application simulates a virtual doctor that collects patient health information through an interactive form and allows patients to discuss their health concerns with an AI assistant.
+The AI Doctor is a virtual healthcare assistant application that provides a medical consultation experience. Built with Python, Streamlit and powered by OpenAI's GPT models, it provides personalized data-driven medical guidance through an interactive interface.
+
+## Core Functionality
+
+The virtual doctor agent:
+
+1. **Collects Patient Information** through an intuitive form interface (demographics, symptoms, medical history, medications)
+
+2. **Analyzes Health Data** using three sophisticated systems:
+
+   - Bayesian reasoning for probabilistic diagnosis
+   - Systems Medicine approach that views the body as interconnected (rather than compartmentalized)
+   - SERP API integration for up-to-date medical information
+
+3. **Provides Holistic Assessment** by:
+
+   - Identifying connections between seemingly unrelated symptoms
+   - Recognizing patterns across multiple body systems
+   - Considering how lifestyle factors affect overall health
+   - Weaving together insights from multiple medical specialties
+
+4. **Delivers Personalized Guidance** including:
+
+   - Potential explanations for symptoms
+   - Lifestyle recommendations
+   - Suggestions for when to seek in-person care
+
+The application emphasizes a unified healthcare approach that addresses the limitations of compartmentalized medicine, recognizing that inflammation, diet, stress, and other factors are intertwined across multiple body systems.
 
 ![app_logic](images/app_logic.png)
 
 ## Live Demo
 
 The application is live at: **[https://ai-doctor-v1.streamlit.app/](https://ai-doctor-v1.streamlit.app/)**
-
-This Virtual Doctor Assistant helps users assess their health by collecting patient information through an interactive form and providing personalized health insights. It calculates BMI based on height and weight, offers health recommendations, and enables users to discuss their health concerns through an AI-powered chat interface. The assistant analyzes symptoms, provides general health guidance, and creates a seamless, futuristic healthcare experience—all while maintaining that this is for demonstration purposes only and not a replacement for professional medical advice.
 
 ## Technologies Used
 
