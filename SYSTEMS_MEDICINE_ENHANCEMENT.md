@@ -78,6 +78,182 @@ The Systems Medicine model takes a unified approach to healthcare:
 5. **Holistic Interventions**: It suggests lifestyle modifications that address multiple systems at once.
 6. **Pattern Recognition**: It identifies patterns that cross traditional medical boundaries.
 
+### Unified Health Model Diagram
+
+The following diagram illustrates the interconnections between different body systems in the unified health model:
+
+```mermaid
+graph TD
+    classDef neurological fill:#8dd3c7,stroke:#333,stroke-width:1px
+    classDef endocrine fill:#ffffb3,stroke:#333,stroke-width:1px
+    classDef immune fill:#bebada,stroke:#333,stroke-width:1px
+    classDef digestive fill:#fb8072,stroke:#333,stroke-width:1px
+    classDef cardiovascular fill:#80b1d3,stroke:#333,stroke-width:1px
+    classDef respiratory fill:#fdb462,stroke:#333,stroke-width:1px
+    classDef musculoskeletal fill:#b3de69,stroke:#333,stroke-width:1px
+    classDef mental fill:#fccde5,stroke:#333,stroke-width:1px
+    classDef metabolic fill:#d9d9d9,stroke:#333,stroke-width:1px
+
+    N[Neurological System]:::neurological
+    E[Endocrine System]:::endocrine
+    I[Immune System]:::immune
+    D[Digestive System]:::digestive
+    C[Cardiovascular System]:::cardiovascular
+    R[Respiratory System]:::respiratory
+    M[Musculoskeletal System]:::musculoskeletal
+    MH[Mental Health]:::mental
+    MT[Metabolic System]:::metabolic
+
+    N <--> E
+    N <--> I
+    N <--> D
+    N <--> MH
+    N <--> C
+    N <--> R
+    N <--> M
+
+    E <--> I
+    E <--> D
+    E <--> MT
+    E <--> C
+    E <--> MH
+
+    I <--> D
+    I <--> R
+    I <--> M
+    I <--> MH
+    I <--> MT
+
+    D <--> MT
+    D <--> MH
+
+    C <--> R
+    C <--> MT
+
+    M <--> MT
+    M <--> C
+
+    MT <--> E
+    MT <--> C
+
+    MH <--> N
+    MH <--> E
+    MH <--> I
+    MH <--> D
+```
+
+### Cross-Domain Symptom Analysis Diagram
+
+The following diagram illustrates how symptoms can span multiple body systems and how the Systems Medicine model analyzes these connections:
+
+```mermaid
+graph TD
+    classDef symptom fill:#ffcc99,stroke:#333,stroke-width:1px
+    classDef system fill:#99ccff,stroke:#333,stroke-width:1px
+    classDef connection fill:#ccff99,stroke:#333,stroke-width:1px
+
+    H[Headache]:::symptom
+    F[Fatigue]:::symptom
+    D[Digestive Issues]:::symptom
+    A[Anxiety]:::symptom
+    J[Joint Pain]:::symptom
+
+    NS[Neurological System]:::system
+    ES[Endocrine System]:::system
+    IS[Immune System]:::system
+    DS[Digestive System]:::system
+    MS[Musculoskeletal System]:::system
+    MH[Mental Health]:::system
+
+    H --> NS
+    H --> ES
+    H --> IS
+
+    F --> NS
+    F --> ES
+    F --> IS
+    F --> MH
+
+    D --> DS
+    D --> IS
+    D --> NS
+
+    A --> MH
+    A --> NS
+    A --> ES
+
+    J --> MS
+    J --> IS
+
+    GB[Gut-Brain Axis]:::connection
+    HPA[HPA Axis]:::connection
+    NI[Neuroimmune Pathway]:::connection
+
+    NS <--> GB
+    DS <--> GB
+
+    NS <--> HPA
+    ES <--> HPA
+    MH <--> HPA
+
+    NS <--> NI
+    IS <--> NI
+
+    subgraph "Cross-Domain Analysis"
+        GB
+        HPA
+        NI
+    end
+```
+
+### Lifestyle Factors Impact Diagram
+
+This diagram shows how lifestyle factors can affect multiple body systems simultaneously:
+
+```mermaid
+graph TD
+    classDef lifestyle fill:#ff9999,stroke:#333,stroke-width:1px
+    classDef system fill:#99ccff,stroke:#333,stroke-width:1px
+
+    Diet[Diet]:::lifestyle
+    Sleep[Sleep]:::lifestyle
+    Exercise[Exercise]:::lifestyle
+    Stress[Stress]:::lifestyle
+
+    NS[Neurological System]:::system
+    ES[Endocrine System]:::system
+    IS[Immune System]:::system
+    DS[Digestive System]:::system
+    CS[Cardiovascular System]:::system
+    MS[Musculoskeletal System]:::system
+    MH[Mental Health]:::system
+    MT[Metabolic System]:::system
+
+    Diet --> DS
+    Diet --> IS
+    Diet --> MT
+    Diet --> CS
+    Diet --> NS
+
+    Sleep --> NS
+    Sleep --> ES
+    Sleep --> IS
+    Sleep --> MH
+
+    Exercise --> MS
+    Exercise --> CS
+    Exercise --> MT
+    Exercise --> MH
+    Exercise --> IS
+
+    Stress --> MH
+    Stress --> NS
+    Stress --> ES
+    Stress --> IS
+    Stress --> DS
+    Stress --> CS
+```
+
 ### Example Conversation Flow
 
 1. The patient provides initial information through the intake form.
