@@ -56,14 +56,17 @@ class SerpService:
         # Add medical context to the query
         medical_query = f"{query} medical information health"
         
+        # Create site restriction using site: operator
+        sites = ["mayoclinic.org", "medlineplus.gov", "nih.gov", "who.int", "cdc.gov"]
+        site_query = " OR ".join([f"site:{site}" for site in sites])
+        full_query = f"{medical_query} ({site_query})"
+        
         # SerpAPI implementation
         params = {
             "engine": "google",
-            "q": medical_query,
+            "q": full_query,
             "api_key": self.api_key,
             "num": num_results,
-            # Add medical sites to prioritize in results
-            "as_sitesearch": "mayoclinic.org,medlineplus.gov,nih.gov,who.int,cdc.gov",
             "safe": "active"  # Safe search to filter inappropriate content
         }
         
@@ -103,9 +106,18 @@ class SerpService:
         # Apply rate limiting
         self._rate_limit()
         
+        # Create query with medical news context
+        query = f"{topic} latest medical research news"
+        
+        # Create site restriction using site: operator for medical news sources
+        news_sites = ["nih.gov", "medlineplus.gov", "mayoclinic.org", "webmd.com", 
+                      "medicalnewstoday.com", "healthline.com", "nejm.org", "jamanetwork.com"]
+        site_query = " OR ".join([f"site:{site}" for site in news_sites])
+        full_query = f"{query} ({site_query})"
+        
         params = {
             "engine": "google",
-            "q": f"{topic} latest medical research news",
+            "q": full_query,
             "api_key": self.api_key,
             "num": num_results,
             "tbm": "nws",  # News search
