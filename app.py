@@ -384,6 +384,14 @@ if 'agent' not in st.session_state:
         - Focus on evidence-based information while respecting patient beliefs
         - Recognize when referral to specialists is necessary
 
+        ## Medical Record References
+        When a user uploads medical records, you can reference information from these documents in your responses. When doing so:
+        - Cite the specific page number where information is found using [Page X] format
+        - Explain medical terminology in plain language
+        - Connect information from the records to the user's current concerns
+        - Acknowledge when information might be unclear or incomplete
+        - Maintain patient privacy and confidentiality
+
         IMPORTANT REMINDERS:
         1. Always refer to yourself as 'your virtual doctor assistant' - NEVER use specific names
         2. Only reference information explicitly provided in the intake form
@@ -563,6 +571,37 @@ def call_openai_api(user_input, model="o4-mini-2025-04-16"):
         if 'client' not in st.session_state or 'agent_messages' not in st.session_state:
             return "Error: OpenAI client or agent not properly initialized."
         
+        # Check if the query might be related to uploaded medical records
+        document_query = False
+        document_context = ""
+        
+        # Simple check if the query might be about medical records
+        doc_keywords = ["medical record", "document", "pdf", "report", "test", "result",
+                        "lab", "diagnosis", "record", "upload"]
+        
+        if ('medical_records' in st.session_state and
+            st.session_state.medical_records and
+            any(keyword in user_input.lower() for keyword in doc_keywords)):
+            
+            document_query = True
+            
+            # Get the most recent medical record
+            latest_record = st.session_state.medical_records[-1]
+            
+            # Add document context as a system message
+            document_context = (
+                f"The user is asking about their medical record '{latest_record['metadata']['filename']}'. "
+                f"Here is the content of the document:\n\n{latest_record['text']}\n\n"
+                f"When answering, reference specific parts of the document by mentioning the page number "
+                f"where the information is found. Format as [Page X]."
+            )
+            
+            # Add the document context as a system message
+            st.session_state.agent_messages.append({
+                "role": "system",
+                "content": document_context
+            })
+        
         # Add the user message to the agent's conversation history
         st.session_state.agent_messages.append({
             "role": "user",
@@ -603,6 +642,15 @@ def call_openai_api(user_input, model="o4-mini-2025-04-16"):
             "content": systems_medicine_enhanced_response
         })
         
+        # If this was a document query, remove the document context system message
+        # to keep the context from growing too large
+        if document_query:
+            # Find and remove the document context message
+            st.session_state.agent_messages = [
+                msg for msg in st.session_state.agent_messages
+                if not (msg["role"] == "system" and "Here is the content of the document" in msg.get("content", ""))
+            ]
+        
         return systems_medicine_enhanced_response
     
     except Exception as e:
@@ -642,6 +690,12 @@ if reset_button:
         st.session_state.show_feedback = False
     if 'feedback_submitted' in st.session_state:
         st.session_state.feedback_submitted = False
+    
+    # Reset medical records data
+    if 'medical_records' in st.session_state:
+        st.session_state.medical_records = []
+    if 'last_uploaded_file' in st.session_state:
+        st.session_state.last_uploaded_file = None
     
     st.rerun()
 

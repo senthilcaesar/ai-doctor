@@ -9,6 +9,7 @@ python-dotenv
 matplotlib
 seaborn
 serpapi
+PyMuPDF>=1.22.0
 
 # The 'agents' module is provided by the openai-agents package
 # nest_asyncio is required for handling nested asyncio event loops

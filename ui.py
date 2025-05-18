@@ -1605,12 +1605,69 @@ def render_chat_interface(model_option, call_openai_api):
         # Display conversation history
         st.markdown("<div class='neo-card-header'>Conversation with Virtual Doctor</div>", unsafe_allow_html=True)
         
-        # Add End Session button at the top
-        end_session = st.button(
-            "End Session & Provide Feedback",
-            type="secondary",
-            key="end_session_button"
-        )
+        # Create two columns for the buttons
+        col1, col2 = st.columns([1, 1])
+        
+        # Add End Session button in the first column
+        with col1:
+            end_session = st.button(
+                "End Session & Provide Feedback",
+                type="secondary",
+                key="end_session_button"
+            )
+        
+        # Add Upload Medical Records button in the second column
+        with col2:
+            uploaded_file = st.file_uploader(
+                "Upload Medical Records (PDF)",
+                type=["pdf"],
+                key="medical_record_uploader",
+                help="Upload your medical records in PDF format to allow the virtual doctor to reference them."
+            )
+        
+        # Process uploaded file
+        if uploaded_file is not None:
+            # Check if this is a new file upload
+            if 'last_uploaded_file' not in st.session_state or st.session_state.last_uploaded_file != uploaded_file.name:
+                st.session_state.last_uploaded_file = uploaded_file.name
+                
+                # Import the document processor
+                from document_processor import process_pdf
+                import time
+                
+                # Process the PDF file
+                with st.spinner("Processing your medical records..."):
+                    result = process_pdf(uploaded_file)
+                
+                if result["success"]:
+                    # Store the document in session state
+                    if 'medical_records' not in st.session_state:
+                        st.session_state.medical_records = []
+                    
+                    st.session_state.medical_records.append({
+                        "metadata": result["metadata"],
+                        "text": result["text"],
+                        "timestamp": time.time()
+                    })
+                    
+                    # Notify the user
+                    st.success(f"Medical record '{result['metadata']['filename']}' processed successfully!")
+                    
+                    # Add a message to the chat
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": f"I've processed your medical record '{result['metadata']['filename']}'. You can now ask me questions about it, and I'll reference the relevant information in my answers."
+                    })
+                    
+                    # Add a system message to the agent context
+                    if 'agent_messages' in st.session_state:
+                        st.session_state.agent_messages.append({
+                            "role": "system",
+                            "content": f"The user has uploaded a medical record: '{result['metadata']['filename']}'. The document contains {result['metadata']['page_count']} pages. You can reference this document when answering the user's questions."
+                        })
+                else:
+                    # Show error message
+                    st.error(f"Error processing PDF: {result['error']}")
         
         if end_session:
             st.session_state.show_feedback = True
